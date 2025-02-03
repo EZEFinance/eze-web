@@ -4,10 +4,11 @@ import { Card } from '@heroui/card';
 import { ChartArea, Clock, DollarSign, ArrowDown, ArrowUp } from 'lucide-react';
 import { Image } from '@heroui/image';
 import { Chip } from '@heroui/chip';
-import { InvestmentPool } from '@/types/protocol/pool';
 import { formatPercent, formatUSD } from '@/lib/helper';
+import { urlSepoliaBasescan } from '@/lib/utils';
+import { Staking } from '@/types/staking';
 
-const CardStaking = ({ pool }: { pool: InvestmentPool }) => {
+const CardStaking = ({ pool }: { pool: Staking }) => {
   return (
 
     <Card className="py-5 bg-background/50 w-fit px-8">
@@ -65,7 +66,7 @@ const CardStaking = ({ pool }: { pool: InvestmentPool }) => {
 
         <div className="flex gap-2 md:ml-auto">
           <Button
-            // onPress={() => window.open(pool.investmentUrl, '_blank')}
+            onPress={() => window.open(`${urlSepoliaBasescan(pool.addressStaking)}`, '_blank')}
             variant="bordered"
             className="flex-1 md:flex-none flex items-center justify-center gap-2"
           >
@@ -73,7 +74,7 @@ const CardStaking = ({ pool }: { pool: InvestmentPool }) => {
             <ArrowDown className="w-4 h-4" />
           </Button>
           <Button
-            // onPress={() => window.open(pool.investmentUrl, '_blank')}
+            onPress={() => window.open(`${urlSepoliaBasescan(pool.addressStaking)}`, '_blank')}
             variant="bordered"
             className="flex-1 md:flex-none flex items-center justify-center gap-2"
           >

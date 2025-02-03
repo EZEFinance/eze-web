@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const InvestmentPoolSchema = z.object({
+export const StakingSchema = z.object({
   id: z.string(),
   addressToken: z.string(),
   addressStaking: z.string(),
@@ -16,7 +16,7 @@ export const InvestmentPoolSchema = z.object({
   updatedAt: z.string().datetime()
 });
 
-export const InvestmentPoolListSchema = z.array(InvestmentPoolSchema);
+export const StakingListSchema = z.array(StakingSchema);
 
-export type InvestmentPool = z.infer<typeof InvestmentPoolSchema>;
-export type InvestmentPoolList = z.infer<typeof InvestmentPoolListSchema>;
+export type Staking = z.infer<typeof StakingSchema>;
+export type StakingList = z.infer<typeof StakingListSchema>;
