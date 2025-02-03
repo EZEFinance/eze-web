@@ -135,15 +135,15 @@ const GenerateComponent = () => {
             <div className="flex flex-col gap-4">
               <div className="flex items-center gap-4">
                 <Image
-                  src={mockDashboard[0].farm.logo}
-                  alt={mockDashboard[0].farm.name}
+                  src={mockDashboard[0].logo}
+                  alt={mockDashboard[0].nameProject}
                   className="w-12 h-12 rounded-full ring-2 ring-offset-2 ring-slate-100"
                 />
                 <div>
                   <h3 className="text-lg font-semibold">
-                    {mockDashboard[0].tokens.deposits.map(t => t.symbol).join('/')}
+                    {mockDashboard[0].nameProject}
                   </h3>
-                  <p className="text-sm text-slate-500">{mockDashboard[0].farm.name}</p>
+                  <p className="text-sm text-slate-500">{mockDashboard[0].nameToken}</p>
                 </div>
               </div>
 
@@ -161,14 +161,14 @@ const GenerateComponent = () => {
                     <ChartArea className="w-4 h-4" />
                     <span className="text-sm font-medium text-slate-600">APR</span>
                   </div>
-                  <p className="text-lg font-bold">{formatPercent(mockDashboard[0].apr)}</p>
+                  <p className="text-lg font-bold">{formatPercent(mockDashboard[0].apy)}</p>
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
                     <DollarSign className="w-4 h-4" />
                     <span className="text-sm font-medium text-slate-600">TVL</span>
                   </div>
-                  <p className="text-lg font-bold">{formatUSD(mockDashboard[0].totalValueLocked)}</p>
+                  <p className="text-lg font-bold">{formatUSD(mockDashboard[0].tvl)}</p>
                 </div>
               </div>
 
@@ -176,17 +176,17 @@ const GenerateComponent = () => {
                 <div className="flex items-center gap-2">
                   <Clock className="w-4 h-4" />
                   <span className="text-sm text-slate-600">
-                    7d: {formatPercent(mockDashboard[0].aprWeek)}
+                    7d: Soon
                   </span>
                 </div>
                 <div className="text-sm text-slate-600">
-                  Fee: {formatPercent(mockDashboard[0].fee ?? 0)}
+                  Fee: Soon
                 </div>
               </div>
 
               <div className="flex gap-2">
                 <Button
-                  onPress={() => window.open(mockDashboard[0].investmentUrl, '_blank')}
+                  // onPress={() => window.open(mockDashboard[0].investmentUrl, '_blank')}
                   variant="bordered"
                   className="flex-1 flex items-center justify-center gap-2 w-full"
                 >

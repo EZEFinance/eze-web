@@ -9,19 +9,20 @@ import { formatPercent, formatUSD } from '@/lib/helper';
 
 const CardStaking = ({ pool }: { pool: InvestmentPool }) => {
   return (
-    <Card className="p-4 bg-background/50">
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:gap-6">
+
+    <Card className="py-5 bg-background/50 w-fit px-8">
+      <div className="flex flex-col gap-4">
         <div className="flex items-center gap-4">
           <Image
-            src={pool.farm.logo}
-            alt={pool.farm.name}
+            src={pool.logo}
+            alt={pool.nameProject}
             className="w-12 h-12 rounded-full ring-2 ring-offset-2 ring-slate-100"
           />
           <div>
             <h3 className="text-lg font-semibold">
-              {pool.tokens.deposits.map(t => t.symbol).join('/')}
+              {pool.nameProject}
             </h3>
-            <p className="text-sm text-slate-500">{pool.farm.name}</p>
+            <p className="text-sm text-slate-500">{pool.nameToken}</p>
           </div>
         </div>
 
@@ -33,38 +34,38 @@ const CardStaking = ({ pool }: { pool: InvestmentPool }) => {
           ))}
         </div>
 
-        <div className="grid grid-cols-2 md:flex md:items-center gap-4 md:gap-8">
+        <div className="grid grid-cols-2 gap-4">
           <div>
             <div className="flex items-center gap-2">
               <ChartArea className="w-4 h-4" />
               <span className="text-sm font-medium text-slate-600">APR</span>
             </div>
-            <p className="text-lg font-bold">{formatPercent(pool.apr)}</p>
+            <p className="text-lg font-bold">{formatPercent(pool.apy)}</p>
           </div>
           <div>
             <div className="flex items-center gap-2">
               <DollarSign className="w-4 h-4" />
               <span className="text-sm font-medium text-slate-600">TVL</span>
             </div>
-            <p className="text-lg font-bold">{formatUSD(pool.totalValueLocked)}</p>
+            <p className="text-lg font-bold">{formatUSD(pool.tvl)}</p>
           </div>
         </div>
 
-        <div className="flex flex-col md:flex-row gap-2 md:gap-4">
+        <div className="flex flex-col gap-4">
           <div className="flex items-center gap-2">
             <Clock className="w-4 h-4" />
             <span className="text-sm text-slate-600">
-              7d: {formatPercent(pool.aprWeek)}
+              7d: Soon
             </span>
           </div>
           <div className="text-sm text-slate-600">
-            Fee: {formatPercent(pool.fee ?? 0)}
+            Fee: Soon
           </div>
         </div>
 
         <div className="flex gap-2 md:ml-auto">
           <Button
-            onPress={() => window.open(pool.investmentUrl, '_blank')}
+            // onPress={() => window.open(pool.investmentUrl, '_blank')}
             variant="bordered"
             className="flex-1 md:flex-none flex items-center justify-center gap-2"
           >
@@ -72,7 +73,7 @@ const CardStaking = ({ pool }: { pool: InvestmentPool }) => {
             <ArrowDown className="w-4 h-4" />
           </Button>
           <Button
-            onPress={() => window.open(pool.investmentUrl, '_blank')}
+            // onPress={() => window.open(pool.investmentUrl, '_blank')}
             variant="bordered"
             className="flex-1 md:flex-none flex items-center justify-center gap-2"
           >
