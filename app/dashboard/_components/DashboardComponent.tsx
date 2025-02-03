@@ -4,7 +4,7 @@ import React from 'react'
 import CardStaking from '@/components/card/card-staking';
 import ChartStaking from '@/components/chart/chart-staking';
 import CardPortfolio from '@/components/card/card-portfolio';
-import { mockDashboard } from '@/data/mockDashboard';
+import { dataStaking } from '@/data/dataStaking';
 
 export default function DashboardComponent() {
   return (
@@ -14,7 +14,7 @@ export default function DashboardComponent() {
         <ChartStaking />
       </div>
       <div className="flex flex-col gap-4 w-full">
-        {mockDashboard.map((pool, idx) => (
+        {dataStaking.map((pool, idx) => (
           <CardStaking key={idx} pool={pool} />
         ))}
       </div>

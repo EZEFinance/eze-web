@@ -7,10 +7,10 @@ import { Form } from "@heroui/form"
 import { Select, SelectItem } from "@heroui/select"
 import { Image } from '@heroui/image'
 import { Card } from '@heroui/card'
-import { mockDashboard } from '@/data/mockDashboard'
 import { Chip } from '@heroui/chip'
 import { ArrowUp, ChartArea, Clock, DollarSign } from 'lucide-react'
 import { formatPercent, formatUSD } from '@/lib/helper'
+import { dataStaking } from '@/data/dataStaking'
 
 interface FormData {
   profit: string;
@@ -135,20 +135,20 @@ const GenerateComponent = () => {
             <div className="flex flex-col gap-4">
               <div className="flex items-center gap-4">
                 <Image
-                  src={mockDashboard[0].logo}
-                  alt={mockDashboard[0].nameProject}
+                  src={dataStaking[0].logo}
+                  alt={dataStaking[0].nameProject}
                   className="w-12 h-12 rounded-full ring-2 ring-offset-2 ring-slate-100"
                 />
                 <div>
                   <h3 className="text-lg font-semibold">
-                    {mockDashboard[0].nameProject}
+                    {dataStaking[0].nameProject}
                   </h3>
-                  <p className="text-sm text-slate-500">{mockDashboard[0].nameToken}</p>
+                  <p className="text-sm text-slate-500">{dataStaking[0].nameToken}</p>
                 </div>
               </div>
 
               <div className="flex flex-wrap gap-2">
-                {mockDashboard[0].categories.map((category, idx) => (
+                {dataStaking[0].categories.map((category, idx) => (
                   <Chip key={idx} variant='bordered' color='primary' className='text-xs px-1'>
                     {category.replace('-', ' ')}
                   </Chip>
@@ -161,14 +161,14 @@ const GenerateComponent = () => {
                     <ChartArea className="w-4 h-4" />
                     <span className="text-sm font-medium text-slate-600">APR</span>
                   </div>
-                  <p className="text-lg font-bold">{formatPercent(mockDashboard[0].apy)}</p>
+                  <p className="text-lg font-bold">{formatPercent(dataStaking[0].apy)}</p>
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
                     <DollarSign className="w-4 h-4" />
                     <span className="text-sm font-medium text-slate-600">TVL</span>
                   </div>
-                  <p className="text-lg font-bold">{formatUSD(mockDashboard[0].tvl)}</p>
+                  <p className="text-lg font-bold">{formatUSD(dataStaking[0].tvl)}</p>
                 </div>
               </div>
 
@@ -186,7 +186,7 @@ const GenerateComponent = () => {
 
               <div className="flex gap-2">
                 <Button
-                  // onPress={() => window.open(mockDashboard[0].investmentUrl, '_blank')}
+                  // onPress={() => window.open(dataStaking[0].investmentUrl, '_blank')}
                   variant="bordered"
                   className="flex-1 flex items-center justify-center gap-2 w-full"
                 >
