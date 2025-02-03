@@ -275,7 +275,7 @@ const SkeletonFive = () => {
 
 const items = [
   {
-    title: "Introduction ElizaOS",
+    title: "Introduction Coinbase AgentKit",
     description: (
       <span className="text-sm">
         Powerful agent to manage autonomous AI agents.
