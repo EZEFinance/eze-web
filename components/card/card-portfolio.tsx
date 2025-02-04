@@ -26,7 +26,7 @@ export default function CardPortfolio({ onConnect }: CardPortfolioProps) {
     bNormalized,
     bLoading: isBalanceLoading,
     bError: balanceError
-  } = useAccountBalance({ token: "", decimal: 18 });
+  } = useAccountBalance({ token: "" as HexAddress, decimal: 18 });
 
   console.log('bNormalized', bNormalized);
 

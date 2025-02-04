@@ -10,11 +10,11 @@ import { OnchainKitProvider } from "@coinbase/onchainkit";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import { WagmiProvider, createConfig, http } from 'wagmi';
-import { base, baseSepolia } from 'wagmi/chains';
+import { baseSepolia } from 'wagmi/chains';
 import { coinbaseWallet } from 'wagmi/connectors';
 
-const wagmiConfig = createConfig({
-  chains: [base, baseSepolia],
+export const wagmiConfig = createConfig({
+  chains: [baseSepolia],
   connectors: [
     coinbaseWallet({
       appName: 'onchainkit',
@@ -22,8 +22,7 @@ const wagmiConfig = createConfig({
   ],
   ssr: false,
   transports: {
-    [base.id]: http("https://base-mainnet.g.alchemy.com/v2/vwDTCZX0XZnU6flxj8YzYZuMaOKI3EX9"),
-    [baseSepolia.id]: http("https://base-sepolia.g.alchemy.com/v2/vwDTCZX0XZnU6flxj8YzYZuMaOKI3EX9"),
+    [baseSepolia.id]: http(process.env.NEXT_PUBLIC_RPC_URL_BASE_SEPOLIA),
   },
 });
 
@@ -51,7 +50,7 @@ export default function Providers({ children, themeProps }: ProvidersProps) {
         <WagmiProvider config={wagmiConfig}>
           <OnchainKitProvider
             apiKey={process.env.NEXT_PUBLIC_ONCHAINKIT_API_KEY}
-            chain={base}
+            chain={baseSepolia}
             config={{
               appearance: {
                 name: 'EZE',

@@ -1,64 +1,19 @@
 import type { Token } from '@coinbase/onchainkit/token';
 
 export const ETHToken: Token = {
-    address: "",
-    chainId: 8453,
-    decimals: 18,
-    name: "Ethereum",
-    symbol: "ETH",
-    image: "https://wallet-api-production.s3.amazonaws.com/uploads/tokens/eth_288.png",
-  };
-
-  export const USDCToken: Token = {
-    address: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
-    chainId: 8453,
-    decimals: 6,
-    name: "USDC",
-    symbol: "USDC",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ43MuDqq54iD1ZCRL_uthAPkfwSSL-J5qI_Q&s",
-  };
-
-export const SHIBToken: Token = {
-  "address": "0x95ad61b0a150d79219dcf64e1e6cc01f0b64c4ce",
-  "chainId": 8453,
-  "decimals": 18,
-  "name": "Shiba Inu",
-  "symbol": "SHIB",
-  "image": "https://s2.coinmarketcap.com/static/img/coins/64x64/5994.png"
+  address: "0xC418dAb8482E4E5c31d861Fdd2461E8F2f88d5AE",
+  chainId: 84532,
+  decimals: 18,
+  name: "Uniswap",
+  symbol: "UNI",
+  image: "https://chainbroker.io/_next/image/?url=https%3A%2F%2Fstatic.chainbroker.io%2Fmediafiles%2Fprojects%2Funiswap%2Funiswap.jpeg&w=2560&q=75",
 };
 
-export const BONKToken: Token = {
-  "address": "0xdf1cf211d38e7762c9691be4d779a441a17a6cfc",
-  "chainId": 8453,
-  "decimals": 18,
-  "name": "Bonk",
-  "symbol": "BONK",
-  "image": "https://s2.coinmarketcap.com/static/img/coins/64x64/23095.png"
-};
-
-export const OMToken: Token = {
-  "address": "0x3992b27da26848c2b19cea6fd25ad5568b68ab98",
-  "chainId": 8453,
-  "decimals": 18,
-  "name": "MANTRA",
-  "symbol": "OM",
-  "image": "https://s2.coinmarketcap.com/static/img/coins/64x64/6536.png"
-};
-
-export const AEROToken: Token = {
-  "address": "0x940181a94a35a4569e4529a3cdfb74e38fd98631",
-  "chainId": 8453,
-  "decimals": 18,
-  "name": "Aerodrome",
-  "symbol": "AERO",
-  "image": "https://s2.coinmarketcap.com/static/img/coins/64x64/29270.png"
-};
-
-export const VIRTUALToken: Token = {
-  "address": "0x0b3e328455c4059EEb9e3f84b5543F74E24e7E1b",
-  "chainId": 8453,
-  "decimals": 18,
-  "name": "Virtuals",
-  "symbol": "VIRTUAL",
-  "image": "https://s2.coinmarketcap.com/static/img/coins/64x64/29420.png"
+export const USDCToken: Token = {
+  address: "0xaCA31A7E4d867f5C3180f401390DCF2d462B06B9",
+  chainId: 84532,
+  decimals: 6,
+  name: "USDC",
+  symbol: "USDC",
+  image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ43MuDqq54iD1ZCRL_uthAPkfwSSL-J5qI_Q&s",
 };

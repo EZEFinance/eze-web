@@ -1,13 +1,13 @@
 "use client";
 
 import React from 'react';
-import SwapBox from "@/components/transaction/swap";
+import SwapCard from '@/components/card/card-swap';
 
 export default function SwapComponent() {
 
   return (
     <div className='w-full'>
-      <SwapBox />
+      <SwapCard />
     </div>
   );
 }

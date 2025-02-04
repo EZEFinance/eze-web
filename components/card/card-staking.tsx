@@ -4,19 +4,18 @@ import { Card } from '@heroui/card';
 import { ChartArea, Clock, DollarSign, ArrowDown, ArrowUp } from 'lucide-react';
 import { Image } from '@heroui/image';
 import { Chip } from '@heroui/chip';
-import { formatPercent, formatUSD } from '@/lib/helper';
+import { formatPercent, formatUSD, normalizeAPY } from '@/lib/helper';
 import { urlSepoliaBasescan } from '@/lib/utils';
 import { Staking } from '@/types/staking';
 
 const CardStaking = ({ pool }: { pool: Staking }) => {
   return (
-
-    <Card className="py-5 bg-background/50 w-fit px-8">
-      <div className="flex flex-col gap-4">
-        <div className="flex items-center gap-4">
+    <Card className="p-4 bg-background/50">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:gap-6">
+        <div className="flex items-center gap-4 min-w-44">
           <Image
             src={pool.logo}
-            alt={pool.nameProject}
+            alt={pool.nameToken}
             className="w-12 h-12 rounded-full ring-2 ring-offset-2 ring-slate-100"
           />
           <div>
@@ -35,24 +34,24 @@ const CardStaking = ({ pool }: { pool: Staking }) => {
           ))}
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 md:flex md:items-center gap-4 md:gap-8">
           <div>
             <div className="flex items-center gap-2">
               <ChartArea className="w-4 h-4" />
-              <span className="text-sm font-medium text-slate-600">APR</span>
+              <span className="text-sm font-medium text-slate-600">APY</span>
             </div>
-            <p className="text-lg font-bold">{formatPercent(pool.apy)}</p>
+            <p className="text-lg font-bold">{formatPercent(normalizeAPY(pool.apy))}</p>
           </div>
           <div>
             <div className="flex items-center gap-2">
               <DollarSign className="w-4 h-4" />
               <span className="text-sm font-medium text-slate-600">TVL</span>
             </div>
-            <p className="text-lg font-bold">{formatUSD(pool.tvl)}</p>
+            <p className="text-lg font-bold">{formatUSD(normalizeAPY(pool.tvl))}</p>
           </div>
         </div>
 
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col md:flex-row gap-2 md:gap-4">
           <div className="flex items-center gap-2">
             <Clock className="w-4 h-4" />
             <span className="text-sm text-slate-600">

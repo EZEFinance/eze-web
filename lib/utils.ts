@@ -6,5 +6,5 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function urlSepoliaBasescan(address?: string) {
-  return `https://www.sepolia.basescan.org/address/${address}`;
+  return `https://sepolia.basescan.org/address/${address}`;
 }

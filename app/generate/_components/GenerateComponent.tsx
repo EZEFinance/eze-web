@@ -9,7 +9,7 @@ import { Image } from '@heroui/image'
 import { Card } from '@heroui/card'
 import { Chip } from '@heroui/chip'
 import { ArrowUp, ChartArea, Clock, DollarSign } from 'lucide-react'
-import { formatPercent, formatUSD } from '@/lib/helper'
+import { formatPercent, formatUSD, normalizeAPY } from '@/lib/helper'
 import { useStaking } from '@/hooks/query/useStaking'
 import { urlSepoliaBasescan } from '@/lib/utils'
 
@@ -162,16 +162,16 @@ const GenerateComponent = () => {
                 <div>
                   <div className="flex items-center gap-2">
                     <ChartArea className="w-4 h-4" />
-                    <span className="text-sm font-medium text-slate-600">APR</span>
+                    <span className="text-sm font-medium text-slate-600">APY</span>
                   </div>
-                  <p className="text-lg font-bold">{formatPercent((sData && sData[0]?.apy) ?? 0)}</p>
+                  <p className="text-lg font-bold">{formatPercent((sData && normalizeAPY(sData[0]?.apy)) ?? 0)}</p>
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
                     <DollarSign className="w-4 h-4" />
                     <span className="text-sm font-medium text-slate-600">TVL</span>
                   </div>
-                  <p className="text-lg font-bold">{formatUSD((sData && sData[0].tvl) ?? 0)}</p>
+                  <p className="text-lg font-bold">{formatUSD((sData && normalizeAPY(sData[0].tvl)) ?? 0)}</p>
                 </div>
               </div>
 

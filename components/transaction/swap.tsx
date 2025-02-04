@@ -10,19 +10,14 @@ import {
 import { Wallet, ConnectWallet } from '@coinbase/onchainkit/wallet';
 import { useAccount } from 'wagmi';
 import type { Token } from '@coinbase/onchainkit/token';
-import { AEROToken, BONKToken, ETHToken, OMToken, SHIBToken, USDCToken, VIRTUALToken } from '@/data/dataToken';
+import { ETHToken, USDCToken } from '@/data/dataToken';
 
 export default function SwapBox() {
   const { address } = useAccount();
 
   const swappableTokens: Token[] = [
     ETHToken,
-    USDCToken,
-    SHIBToken,
-    BONKToken,
-    OMToken,
-    AEROToken,
-    VIRTUALToken
+    USDCToken
   ];
 
   return address ? (
