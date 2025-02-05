@@ -19,9 +19,9 @@ export default function Navbar() {
 
   return (
     <HeroUINavbar maxWidth="full" position="sticky" className="bg-transparent backdrop-saturate-100" isMenuOpen={isMenuOpen} onMenuOpenChange={setIsMenuOpen}>
-      <NavbarContent className="basis-1/5 lg:basis-full hidden lg:flex lg:flex-row items-center" justify="start">
+      <NavbarContent className="basis-1/5 xl:basis-full hidden xl:flex xl:flex-row items-center" justify="start">
         <Link href="/home" title="Home">
-          <Image src="/logo.png" alt="logo" className="w-11 h-11 rounded-full ring-1 p-1 ring-gray-600" width={50} height={50} />
+          <Image src="/logo.png" alt="logo" className="min-w-11 min-h-11 w-11 h-11 rounded-full ring-1 p-1 ring-gray-600" width={50} height={50} />
         </Link>
         <div className="relative flex items-center border border-gray-600 rounded-full w-fit">
           <div className="realtive flex p-1">
@@ -53,8 +53,8 @@ export default function Navbar() {
         </div>
       </NavbarContent>
 
-      <NavbarContent className="hidden lg:flex basis-1/5 lg:basis-full mb-4" justify="end">
-        <NavbarItem className="hidden lg:flex gap-4">
+      <NavbarContent className="hidden xl:flex basis-1/5 xl:basis-full mb-4" justify="end">
+        <NavbarItem className="hidden xl:flex gap-4">
           <Link isExternal href={siteConfig.links.docs} title="Docs">
             <BookText className="text-default-500 h-5 w-5" />
           </Link>
@@ -66,7 +66,7 @@ export default function Navbar() {
         </NavbarItem>
       </NavbarContent>
 
-      <NavbarContent className="lg:hidden basis-1 pl-4">
+      <NavbarContent className="xl:hidden basis-1 pl-4">
         <div className="flex justify-between items-center w-full">
           <NavbarMenuToggle className="p-5 -ml-5" />
           <div className="flex flex-row gap-3">
