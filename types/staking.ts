@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const StakingSchema = z.object({
-  id: z.string(),
+  idProtocol: z.string(),
   addressToken: z.string(),
   addressStaking: z.string(),
   nameToken: z.string(),

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from '@heroui/button';
 import { Card } from '@heroui/card';
-import { ChartArea, Clock, DollarSign, ArrowDown, ArrowUp } from 'lucide-react';
+import { ChartArea, DollarSign, ArrowDown, ArrowUp } from 'lucide-react';
 import { Image } from '@heroui/image';
 import { Chip } from '@heroui/chip';
 import { formatPercent, formatUSD, normalizeAPY } from '@/lib/helper';
@@ -48,18 +48,6 @@ const  CardStaking = ({ pool }: { pool: Staking }) => {
               <span className="text-sm font-medium text-slate-600">TVL</span>
             </div>
             <p className="text-lg font-bold">{formatUSD(normalizeAPY(pool.tvl))}</p>
-          </div>
-        </div>
-
-        <div className="flex flex-col md:flex-row gap-2 md:gap-4">
-          <div className="flex items-center gap-2">
-            <Clock className="w-4 h-4" />
-            <span className="text-sm text-slate-600">
-              7d: Soon
-            </span>
-          </div>
-          <div className="text-sm text-slate-600">
-            Fee: Soon
           </div>
         </div>
 

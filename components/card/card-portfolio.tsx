@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Card, CardHeader, CardBody } from '@heroui/card';
-import { useAccountBalance } from '@/hooks/query/useAccountBalance';
 import { useCurAccount } from '@/hooks/query/useCurAccount';
 import { Image } from '@heroui/image';
 import { Skeleton } from '@heroui/skeleton';
@@ -8,9 +7,12 @@ import { Button } from '@heroui/button';
 import { CheckCircle, Copy, ExternalLink } from 'lucide-react';
 import { Chip } from '@heroui/chip';
 import { WalletComponents } from '../wallet';
+import ModalListToken from '../modal/modal-list-token';
 
 export default function CardPortfolio() {
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [copied, setCopied] = useState(false);
+
   const {
     curAddress,
     curAvatar,
@@ -18,12 +20,6 @@ export default function CardPortfolio() {
     isDisconnected,
     isLoading: isAccountLoading
   } = useCurAccount();
-
-  const {
-    bNormalized,
-    bLoading: isBalanceLoading,
-    bError: balanceError
-  } = useAccountBalance({ token: "" as HexAddress, decimal: 18 });
 
   const handleCopyAddress = () => {
     if (curAddress) {
@@ -37,6 +33,10 @@ export default function CardPortfolio() {
     if (!curAddress) return '';
     return `${curAddress.slice(0, 6)}...${curAddress.slice(-4)}`;
   };
+
+  const closeModal = useCallback(() => {
+    setIsModalOpen(false);
+  }, []);
 
   if (isAccountLoading) {
     return (
@@ -129,20 +129,23 @@ export default function CardPortfolio() {
 
                 <div className="p-4 rounded-xl bg-transparent border-1 border-gray-700">
                   <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
-                    <span className="text-sm text-gray-400">Balance</span>
-                    <div className="flex items-center">
-                      {isBalanceLoading ? (
-                        <div className="h-5 w-24 bg-gray-700 rounded animate-pulse" />
-                      ) : balanceError ? (
-                        <span className="text-sm text-red-400">Error loading balance</span>
-                      ) : (
-                        <span className="text-lg font-medium text-white">
-                          {bNormalized?.toFixed(2)} ETH
-                        </span>
-                      )}
+                    <span className="text-sm text-gray-400">List Token</span>
+                    <div className="flex items-center gap-2">
+                      <Button color='primary' variant='flat' size='sm' className="w-full" onPress={() => setIsModalOpen(true)}>
+                        View Token
+                      </Button>
                     </div>
                   </div>
                 </div>
+
+                <ModalListToken
+                  isOpen={isModalOpen}
+                  setIsOpen={closeModal}
+                />
+
+                <Button color='primary' variant='solid' size='lg' className="w-full">
+                  Switch to AI Wallet
+                </Button>
               </div>
             )}
           </div>
