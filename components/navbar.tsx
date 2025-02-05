@@ -11,6 +11,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { WalletComponents } from "./wallet";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
 
 export default function Navbar() {
   const pathname = usePathname()
@@ -18,7 +19,10 @@ export default function Navbar() {
 
   return (
     <HeroUINavbar maxWidth="full" position="sticky" className="bg-transparent backdrop-saturate-100" isMenuOpen={isMenuOpen} onMenuOpenChange={setIsMenuOpen}>
-      <NavbarContent className="basis-1/5 lg:basis-full hidden lg:block" justify="start">
+      <NavbarContent className="basis-1/5 lg:basis-full hidden lg:flex lg:flex-row items-center" justify="start">
+        <Link href="/home" title="Home">
+          <Image src="/logo.png" alt="logo" className="w-11 h-11 rounded-full ring-1 p-1 ring-gray-600" width={50} height={50} />
+        </Link>
         <div className="relative flex items-center border border-gray-600 rounded-full w-fit">
           <div className="realtive flex p-1">
             {siteConfig.navItems.map((item) => (
