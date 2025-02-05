@@ -5,7 +5,7 @@ import { Button } from "@heroui/button";
 
 export function FaucetGrid() {
   return (
-    <div className="h-[1000px] w-full">
+    <div className="h-[700px] w-full">
       <LayoutGrid cards={cards} />
     </div>
   );
