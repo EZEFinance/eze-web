@@ -1,7 +1,7 @@
-import { wagmiConfig } from "@/components/providers";
 import { EZEFinanceABI } from "@/lib/abis/EZEFinanceABI";
 import { denormalize, valueToBigInt } from "@/lib/bignumber";
 import { ADDRESS_EZEFINANCE } from "@/lib/constants";
+import { useWagmiConfig } from "@/lib/wagmi";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { erc20Abi } from "viem";
@@ -15,6 +15,7 @@ type Status = "idle" | "loading" | "success" | "error";
 
 export const useSwap = () => {
   const { address: userAddress } = useAccount();
+  const wagmiConfig = useWagmiConfig();
 
   const [steps, setSteps] = useState<
     Array<{
@@ -60,20 +61,27 @@ export const useSwap = () => {
           )
         );
 
-        const approveHash = await writeContract(wagmiConfig, {
+        await writeContract(wagmiConfig, {
           address: addressTokenIn,
           abi: erc20Abi,
           functionName: "approve",
           args: [ADDRESS_EZEFINANCE, valueToBigInt(dAmount + 10)],
         });
 
-        const approveReceipt = await waitForTransactionReceipt(wagmiConfig, {
-          hash: approveHash,
-        });
+        // const approveHash = await writeContract(wagmiConfig, {
+        //   address: addressTokenIn,
+        //   abi: erc20Abi,
+        //   functionName: "approve",
+        //   args: [ADDRESS_EZEFINANCE, valueToBigInt(dAmount + 10)],
+        // });
 
-        if (approveReceipt.status !== "success") {
-          throw new Error("Approval transaction failed");
-        }
+        // const approveReceipt = await waitForTransactionReceipt(wagmiConfig, {
+        //   hash: approveHash,
+        // });
+
+        // if (approveReceipt.status !== "success") {
+        //   throw new Error("Approval transaction failed");
+        // }
 
         setSteps((prev) =>
           prev.map((item) =>

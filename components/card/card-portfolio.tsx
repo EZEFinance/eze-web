@@ -5,14 +5,11 @@ import { useCurAccount } from '@/hooks/query/useCurAccount';
 import { Image } from '@heroui/image';
 import { Skeleton } from '@heroui/skeleton';
 import { Button } from '@heroui/button';
-import { CheckCircle, Copy, ExternalLink, Wallet } from 'lucide-react';
+import { CheckCircle, Copy, ExternalLink } from 'lucide-react';
 import { Chip } from '@heroui/chip';
+import { WalletComponents } from '../wallet';
 
-interface CardPortfolioProps {
-  onConnect?: () => void;
-}
-
-export default function CardPortfolio({ onConnect }: CardPortfolioProps) {
+export default function CardPortfolio() {
   const [copied, setCopied] = useState(false);
   const {
     curAddress,
@@ -69,39 +66,34 @@ export default function CardPortfolio({ onConnect }: CardPortfolioProps) {
         <div className="absolute bottom-0 left-0 w-24 h-24 bg-purple-500/10 rounded-full blur-2xl" />
 
         <div className="flex flex-col gap-6 items-center">
-          <div className="flex flex-col items-center gap-4">
-            <div className="relative group">
-              <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full opacity-75 blur group-hover:opacity-100 transition duration-300" />
-              <Image
-                src={curAvatar || "/default-avatar.svg"}
-                alt={curName}
-                className="relative w-24 h-24 rounded-full border-2 border-gray-700 object-cover"
-              />
-            </div>
-            
-            <div className="text-center">
-              <CardHeader className="p-0">
-                <h3 className="text-2xl font-bold text-white">{curName}</h3>
-              </CardHeader>
-              <span className={`inline-flex items-center px-3 py-1 mt-2 rounded-full text-sm font-medium ${
-                isDisconnected 
+          {!isDisconnected && (
+            <div className="flex flex-col items-center gap-4">
+              <div className="relative group">
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full opacity-75 blur group-hover:opacity-100 transition duration-300" />
+                <Image
+                  src={curAvatar || "/default-avatar.svg"}
+                  alt={curName}
+                  className="relative w-24 h-24 rounded-full border-2 border-gray-700 object-cover"
+                />
+              </div>
+
+              <div className="text-center">
+                <CardHeader className="p-0">
+                  <h3 className="text-2xl font-bold text-white">{curName}</h3>
+                </CardHeader>
+                <span className={`inline-flex items-center px-3 py-1 mt-2 rounded-full text-sm font-medium ${isDisconnected
                   ? 'bg-red-500/10 text-red-400 border border-red-500/20'
                   : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-              }`}>
-                {isDisconnected ? 'Disconnected' : 'Connected'}
-              </span>
+                  }`}>
+                  {isDisconnected ? 'Disconnected' : 'Connected'}
+                </span>
+              </div>
             </div>
-          </div>
+          )}
 
           <div className="flex-1 flex flex-col gap-4">
             {isDisconnected ? (
-              <Button
-                className="w-full md:w-auto bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white"
-                onClick={onConnect}
-              >
-                <Wallet className="mr-2 h-4 w-4" />
-                Connect Wallet
-              </Button>
+              <WalletComponents />
             ) : (
               <div className="space-y-4">
                 <div className="p-4 rounded-xl bg-transparent border-1 border-gray-700">
@@ -145,7 +137,7 @@ export default function CardPortfolio({ onConnect }: CardPortfolioProps) {
                         <span className="text-sm text-red-400">Error loading balance</span>
                       ) : (
                         <span className="text-lg font-medium text-white">
-                          {bNormalized} ETH
+                          {bNormalized?.toFixed(2)} ETH
                         </span>
                       )}
                     </div>

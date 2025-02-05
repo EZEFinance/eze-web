@@ -12,6 +12,7 @@ import {
 } from 'recharts';
 import { DateRangePicker } from "@heroui/date-picker";
 import { parseDate } from "@internationalized/date";
+import { Button } from '@heroui/button';
 
 const ChartStaking = () => {
   const [timeframe, setTimeframe] = useState('daily');
@@ -104,7 +105,14 @@ const ChartStaking = () => {
   };
 
   return (
-    <Card className="w-full bg-background/50">
+    <Card className="w-full bg-background/50 flex relative">
+      <Button
+        className='absolute w-fit z-30 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-black bg-white'
+        variant='solid'
+      >
+        Coming Soon
+      </Button>
+      <div className='absolute backdrop-blur-sm z-20 w-full h-full'></div>
       <CardHeader className="flex flex-col gap-4">
         <div className="flex justify-between items-center">
           <h2 className="text-xl font-semibold">Profit & Loss Overview</h2>

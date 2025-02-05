@@ -1,35 +1,18 @@
 "use client";
 
 import type { ThemeProviderProps } from "next-themes";
+
 import * as React from "react";
 import { HeroUIProvider } from "@heroui/system";
 import { useRouter } from "next/navigation";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { OnchainKitProvider } from "@coinbase/onchainkit";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { WagmiProvider, createConfig, http, injected } from 'wagmi';
+
+import { WagmiProvider } from 'wagmi';
 import { baseSepolia } from 'wagmi/chains';
-import { coinbaseWallet } from 'wagmi/connectors';
-
-const createWagmiConfig = () => {
-  if (typeof window === 'undefined') {
-    return null;
-  }
-
-  return createConfig({
-    chains: [baseSepolia],
-    connectors: [
-      injected(),
-      coinbaseWallet({
-        appName: 'onchainkit',
-      }),
-    ],
-    ssr: false,
-    transports: {
-      [baseSepolia.id]: http(process.env.NEXT_PUBLIC_RPC_URL_BASE_SEPOLIA),
-    },
-  });
-};
+import { useWagmiConfig } from "@/lib/wagmi";
+import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
 
 export interface ProvidersProps {
   children: React.ReactNode;
@@ -48,23 +31,17 @@ const queryClient = new QueryClient();
 
 export default function Providers({ children, themeProps }: ProvidersProps) {
   const router = useRouter();
-  const [wagmiConfig, setWagmiConfig] = React.useState<ReturnType<typeof createConfig> | null>(null);
-
-  React.useEffect(() => {
-    setWagmiConfig(createWagmiConfig());
-  }, []);
-
-  if (!wagmiConfig) {
-    return null;
-  }
+  const wagmiConfig = useWagmiConfig();
 
   return (
     <HeroUIProvider navigate={router.push}>
-      <QueryClientProvider client={queryClient}>
-        <WagmiProvider config={wagmiConfig}>
+      <WagmiProvider config={wagmiConfig}>
+        <QueryClientProvider client={queryClient}>
           <OnchainKitProvider
             apiKey={process.env.NEXT_PUBLIC_ONCHAINKIT_API_KEY}
             chain={baseSepolia}
+            projectId={process.env.NEXT_PUBLIC_ONCHAINKIT_PROJECT_ID}
+            rpcUrl={process.env.NEXT_PUBLIC_RPC_URL_BASE_SEPOLIA}
             config={{
               appearance: {
                 name: 'EZE',
@@ -72,19 +49,16 @@ export default function Providers({ children, themeProps }: ProvidersProps) {
                 mode: 'light',
                 theme: 'base',
               },
-              wallet: {
-                display: 'modal',
-                termsUrl: 'https://...',
-                privacyUrl: 'https://...',
-              },
             }}
           >
-            <NextThemesProvider {...themeProps}>
-              {children}
-            </NextThemesProvider>
+            <RainbowKitProvider modalSize="compact">
+              <NextThemesProvider {...themeProps}>
+                {children}
+              </NextThemesProvider>
+            </RainbowKitProvider>
           </OnchainKitProvider>
-        </WagmiProvider>
-      </QueryClientProvider>
+        </QueryClientProvider>
+      </WagmiProvider>
     </HeroUIProvider>
   );
 }

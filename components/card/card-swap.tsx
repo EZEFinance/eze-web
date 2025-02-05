@@ -1,3 +1,5 @@
+"use client"
+
 import React, { useState, useMemo, useEffect } from 'react';
 import {
   ArrowDownUp,
@@ -10,7 +12,7 @@ import { Card, CardBody } from '@heroui/card';
 import { Chip } from '@heroui/chip';
 import { useStaking } from '@/hooks/query/useStaking';
 import { useAccountBalance } from '@/hooks/query/useAccountBalance';
-import { useSwap } from '@/hooks/mutation/useSwap';
+import ButtonSwap from '../button/button-swap';
 
 interface Token {
   id: string;
@@ -36,13 +38,13 @@ const SwapCard: React.FC = () => {
     }
   }, [sData]);
 
-  const { bNormalized: bFrom, bRefetch: bFromRefetch } = useAccountBalance({ 
-    token: fromToken?.addressToken as HexAddress, 
-    decimal: 6 
+  const { bNormalized: bFrom, bRefetch: bFromRefetch } = useAccountBalance({
+    token: fromToken?.addressToken as HexAddress,
+    decimal: 6
   });
-  const { bNormalized: bTo, bRefetch: bToRefetch } = useAccountBalance({ 
-    token: toToken?.addressToken as HexAddress, 
-    decimal: 6 
+  const { bNormalized: bTo, bRefetch: bToRefetch } = useAccountBalance({
+    token: toToken?.addressToken as HexAddress,
+    decimal: 6
   });
 
   useEffect(() => {
@@ -71,7 +73,7 @@ const SwapCard: React.FC = () => {
 
   const estimatedOutput = useMemo(() => {
     if (!fromAmount || !fromToken || !toToken) return '';
-    
+
     const convertedAmount = (
       parseFloat(fromAmount)
     ).toFixed(6);
@@ -84,23 +86,12 @@ const SwapCard: React.FC = () => {
     const fromAmountNum = parseFloat(fromAmount || '0');
 
     return (
-      !!fromToken && 
-      !!toToken && 
-      !!fromAmount && 
-      fromAmountNum > 0 && 
+      !!fromToken &&
+      !!toToken &&
+      !!fromAmount &&
+      fromAmountNum > 0 &&
       fromAmountNum <= fromBalance
     );
-  };
-
-  const { mutation } = useSwap();
-
-  const handleSwap = () => {
-    mutation.mutate({
-      addressTokenIn: fromToken?.addressToken as HexAddress,
-      addressTokenOut: toToken?.addressToken as HexAddress,
-      amount: fromAmount,
-      decimals: 6
-    });
   };
 
   return (
@@ -198,7 +189,18 @@ const SwapCard: React.FC = () => {
             </div>
           </div>
 
-          <Button
+          <ButtonSwap
+            fromToken={fromToken as Token}
+            toToken={toToken as Token}
+            validateSwap={validateSwap}
+            addressTokenIn={fromToken?.addressToken as string}
+            addressTokenOut={toToken?.addressToken as string}
+            amount={fromAmount}
+            decimals={6}
+            disabled={!validateSwap()}
+          />
+
+          {/* <Button
             fullWidth
             color="primary"
             variant="solid"
@@ -210,7 +212,7 @@ const SwapCard: React.FC = () => {
               !toToken ? 'Select To Token' :
                 !fromAmount ? 'Enter Amount' :
                   validateSwap() ? 'Swap' : 'Insufficient Balance'}
-          </Button>
+          </Button> */}
         </CardBody>
       </Card>
 
