@@ -8,13 +8,13 @@ import { formatPercent, formatUSD, normalizeAPY } from '@/lib/helper';
 import { urlSepoliaBasescan } from '@/lib/utils';
 import { Staking } from '@/types/staking';
 
-const CardStaking = ({ pool }: { pool: Staking }) => {
+const  CardStaking = ({ pool }: { pool: Staking }) => {
   return (
     <Card className="p-4 bg-background/50">
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:gap-6">
         <div className="flex items-center gap-4 min-w-44">
           <Image
-            src={pool.logo}
+            src={pool.logo || "#"}
             alt={pool.nameToken}
             className="w-12 h-12 rounded-full ring-2 ring-offset-2 ring-slate-100"
           />

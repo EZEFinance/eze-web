@@ -28,8 +28,6 @@ export default function CardPortfolio({ onConnect }: CardPortfolioProps) {
     bError: balanceError
   } = useAccountBalance({ token: "" as HexAddress, decimal: 18 });
 
-  console.log('bNormalized', bNormalized);
-
   const handleCopyAddress = () => {
     if (curAddress) {
       navigator.clipboard.writeText(curAddress);
@@ -75,7 +73,7 @@ export default function CardPortfolio({ onConnect }: CardPortfolioProps) {
             <div className="relative group">
               <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full opacity-75 blur group-hover:opacity-100 transition duration-300" />
               <Image
-                src={curAvatar}
+                src={curAvatar || "/default-avatar.svg"}
                 alt={curName}
                 className="relative w-24 h-24 rounded-full border-2 border-gray-700 object-cover"
               />

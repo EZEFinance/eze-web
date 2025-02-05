@@ -5,7 +5,7 @@ export const useStaking = () => {
   const { data: sData, isLoading: sLoading } = useQuery<StakingList>({
     queryKey: ["staking"],
     queryFn: async () => {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_URL_API}/staking`)
+      const response = await fetch(`/api/staking`)
       if (!response.ok) {
         throw new Error("Failed to fetch staking data")
       }
