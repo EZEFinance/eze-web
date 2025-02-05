@@ -1,23 +1,33 @@
 'use client';
+
 import { EZEFinanceABI } from '@/lib/abis/EZEFinanceABI';
 import { MockTokenABI } from '@/lib/abis/MockTokenABI';
 import { denormalize, valueToBigInt } from '@/lib/bignumber';
 import { ADDRESS_EZEFINANCE } from '@/lib/constants';
 import {
   Transaction,
-  TransactionButton,
-  TransactionStatus,
-  TransactionStatusAction,
-  TransactionStatusLabel,
+  TransactionButton
 } from '@coinbase/onchainkit/transaction';
 import type {
   TransactionError,
   TransactionResponse,
 } from '@coinbase/onchainkit/transaction';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import type { ContractFunctionParameters } from 'viem';
 import Loading from '../loader/loading';
 import ButtonConnectWallet from './button-connect-wallet';
+import ModalTransaction from '../modal/modal-transaction';
+
+interface ButtonSwapProps {
+  fromToken: { addressToken: string } | null;
+  toToken: { addressToken: string } | null;
+  validateSwap: () => boolean;
+  addressTokenIn: string;
+  addressTokenOut: string;
+  amount: string;
+  decimals: number;
+  disabled: boolean;
+}
 
 export default function ButtonSwap({
   fromToken,
@@ -28,21 +38,11 @@ export default function ButtonSwap({
   amount,
   decimals,
   disabled
-}: {
-  fromToken: {
-    addressToken: string;
-  };
-  toToken: {
-    addressToken: string;
-  };
-  validateSwap: () => boolean;
-  addressTokenIn: string;
-  addressTokenOut: string;
-  amount: string;
-  decimals: number;
-  disabled: boolean;
-}) {
-  const [sTransaction, setSTransaction] = useState<string | null>(null);
+}: ButtonSwapProps) {
+  const [transactionStatus, setTransactionStatus] = useState<string | null>(null);
+  const [transactionData, setTransactionData] = useState<TransactionResponse | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [error, setError] = useState<TransactionError | null>(null);
 
   const dAmount = denormalize(amount || 0, decimals);
 
@@ -61,41 +61,63 @@ export default function ButtonSwap({
     }
   ] as unknown as ContractFunctionParameters[];
 
-  const handleError = (err: TransactionError) => {
-    console.error('Transaction error:', err);
-  };
+  const handleError = useCallback((err: TransactionError) => {
+    setError(err);
+    setIsModalOpen(true);
+  }, []);
 
-  const handleSuccess = (response: TransactionResponse) => {
-    console.log('Transaction successful', response);
-  };
+  const handleSuccess = useCallback((response: TransactionResponse) => {
+    setTransactionData(response);
+    setIsModalOpen(true);
+  }, []);
 
-  console.log("status", sTransaction);
+  const handleStatusChange = useCallback((status: { statusName: string }) => {
+    setTransactionStatus(status.statusName);
+  }, []);
+
+  const closeModal = useCallback(() => {
+    setIsModalOpen(false);
+  }, []);
+
+  const buttonText = !fromToken 
+    ? 'Select From Token' 
+    : !toToken 
+    ? 'Select To Token' 
+    : !amount 
+    ? 'Enter Amount' 
+    : validateSwap() 
+    ? 'Swap' 
+    : 'Insufficient Balance';
 
   return (
     <div>
-      {sTransaction === "transactionPending" || sTransaction === "transactionLegacyExecuted" && (<Loading />)}
+      {(transactionStatus === "transactionPending" || 
+        transactionStatus === "transactionLegacyExecuted") && <Loading />}
+      
       <Transaction
         contracts={contracts}
         chainId={84532}
         onError={handleError}
         onSuccess={handleSuccess}
-        onStatus={(status) => setSTransaction(status.statusName)}
+        onStatus={handleStatusChange}
       >
         <ButtonConnectWallet>
           <TransactionButton
             className="z-0 group relative text-sm inline-flex items-center justify-center box-border appearance-none select-none whitespace-nowrap font-normal subpixel-antialiased overflow-hidden tap-highlight-transparent data-[pressed=true]:scale-[0.97] outline-none data-[focus-visible=true]:z-10 data-[focus-visible=true]:outline-2 data-[focus-visible=true]:outline-focus data-[focus-visible=true]:outline-offset-2 px-4 min-w-20 gap-2 w-full [&>svg]:max-w-[theme(spacing.8)] transition-transform-colors-opacity motion-reduce:transition-none bg-primary text-primary-foreground data-[hover=true]:opacity-hover mt-2 rounded-[20px] h-12"
-            text={!fromToken ? 'Select From Token' :
-              !toToken ? 'Select To Token' :
-                !amount ? 'Enter Amount' :
-                  validateSwap() ? 'Swap' : 'Insufficient Balance'}
+            text={buttonText}
             disabled={disabled}
           />
         </ButtonConnectWallet>
-        <TransactionStatus>
-          <TransactionStatusLabel />
-          <TransactionStatusAction />
-        </TransactionStatus>
       </Transaction>
+
+      <ModalTransaction
+        isOpen={isModalOpen}
+        setIsOpen={closeModal}
+        status={transactionStatus || ""}
+        data={transactionData || { transactionReceipts: [] }}
+        errorMessage={error || undefined}
+        name='swap'
+      />
     </div>
   );
 }

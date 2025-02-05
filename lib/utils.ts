@@ -5,6 +5,6 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function urlSepoliaBasescan(address?: string) {
-  return `https://sepolia.basescan.org/address/${address}`;
+export function urlSepoliaBasescan(address?: string, txHash?: string, type?: 'transaction' | 'address') {
+  return `https://sepolia.basescan.org/${type === 'address' ? 'address' : 'tx'}/${address || txHash}`;
 }

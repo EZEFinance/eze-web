@@ -9,7 +9,6 @@ import { Button } from '@heroui/button';
 import { Modal, ModalContent, ModalHeader, ModalBody } from '@heroui/modal';
 import { Avatar } from '@heroui/avatar';
 import { Card, CardBody } from '@heroui/card';
-import { Chip } from '@heroui/chip';
 import { useStaking } from '@/hooks/query/useStaking';
 import { useAccountBalance } from '@/hooks/query/useAccountBalance';
 import ButtonSwap from '../button/button-swap';
@@ -218,7 +217,7 @@ const SwapCard: React.FC = () => {
                   variant="bordered"
                   color="default"
                   onPress={() => handleTokenSelect(token)}
-                  className="flex flex-col items-center p-3"
+                  className="flex flex-row justify-center items-center p-3"
                   isDisabled={
                     (isTokenModalOpen === 'from' && token.id === toToken?.id) ||
                     (isTokenModalOpen === 'to' && token.id === fromToken?.id)
@@ -227,13 +226,10 @@ const SwapCard: React.FC = () => {
                   <Avatar
                     src={token.logo}
                     alt={token.nameToken}
-                    className="w-12 h-12 mb-2"
+                    className="w-4 h-4"
                   />
                   <div className="text-center">
                     <h4 className="font-semibold">{token.nameToken}</h4>
-                    <Chip size="sm" variant="flat" color="secondary">
-                      {token.chain}
-                    </Chip>
                   </div>
                 </Button>
               ))}

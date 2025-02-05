@@ -49,7 +49,7 @@ export default function Navbar() {
         </div>
       </NavbarContent>
 
-      <NavbarContent className="hidden lg:flex basis-1/5 lg:basis-full" justify="end">
+      <NavbarContent className="hidden lg:flex basis-1/5 lg:basis-full mb-4" justify="end">
         <NavbarItem className="hidden lg:flex gap-4">
           <Link isExternal href={siteConfig.links.docs} title="Docs">
             <BookText className="text-default-500 h-5 w-5" />
