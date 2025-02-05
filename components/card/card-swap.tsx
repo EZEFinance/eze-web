@@ -199,20 +199,6 @@ const SwapCard: React.FC = () => {
             decimals={6}
             disabled={!validateSwap()}
           />
-
-          {/* <Button
-            fullWidth
-            color="primary"
-            variant="solid"
-            className="mt-2 rounded-[20px] h-12"
-            isDisabled={!validateSwap() || mutation.isPending}
-            onPress={handleSwap}
-          >
-            {!fromToken ? 'Select From Token' :
-              !toToken ? 'Select To Token' :
-                !fromAmount ? 'Enter Amount' :
-                  validateSwap() ? 'Swap' : 'Insufficient Balance'}
-          </Button> */}
         </CardBody>
       </Card>
 

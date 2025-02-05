@@ -14,7 +14,9 @@ import type {
   TransactionError,
   TransactionResponse,
 } from '@coinbase/onchainkit/transaction';
+import { useState } from 'react';
 import type { ContractFunctionParameters } from 'viem';
+import Loading from '../loader/loading';
 
 export default function ButtonSwap({
   fromToken,
@@ -39,6 +41,8 @@ export default function ButtonSwap({
   decimals: number;
   disabled: boolean;
 }) {
+  const [sTransaction, setSTransaction] = useState<string | null>(null);
+
   const dAmount = denormalize(amount || 0, decimals);
 
   const contracts = [
@@ -64,14 +68,17 @@ export default function ButtonSwap({
     console.log('Transaction successful', response);
   };
 
+  console.log("status", sTransaction);
+
   return (
-    <div className="flex">
+    <div>
+      {sTransaction === "transactionPending" || sTransaction === "transactionLegacyExecuted" && (<Loading />)}
       <Transaction
         contracts={contracts}
-        className=""
         chainId={84532}
         onError={handleError}
         onSuccess={handleSuccess}
+        onStatus={(status) => setSTransaction(status.statusName)}
       >
         <TransactionButton
           className="z-0 group relative text-sm inline-flex items-center justify-center box-border appearance-none select-none whitespace-nowrap font-normal subpixel-antialiased overflow-hidden tap-highlight-transparent data-[pressed=true]:scale-[0.97] outline-none data-[focus-visible=true]:z-10 data-[focus-visible=true]:outline-2 data-[focus-visible=true]:outline-focus data-[focus-visible=true]:outline-offset-2 px-4 min-w-20 gap-2 w-full [&>svg]:max-w-[theme(spacing.8)] transition-transform-colors-opacity motion-reduce:transition-none bg-primary text-primary-foreground data-[hover=true]:opacity-hover mt-2 rounded-[20px] h-12"
