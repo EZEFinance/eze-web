@@ -311,7 +311,7 @@ const items = [
     title: "AI Content Generation",
     description: (
       <span className="text-sm">
-        Experience the power of AI in generating profile risk.
+        AI is generating a stake recommendation for you.
       </span>
     ),
     header: <SkeletonOne />,
@@ -322,7 +322,7 @@ const items = [
     title: "EZE Recommendation",
     description: (
       <span className="text-sm">
-        Stake and earn ez with sustainable profits.
+        Stake and earn very ez with sustainable profits.
       </span>
     ),
     header: <SkeletonTwo />,
