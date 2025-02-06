@@ -20,7 +20,7 @@ const request = async (endpoint: string, options?: RequestInit) => {
   return response.json();
 };
 
-export const apiAgent = {
+const apiAgent = {
   get: (endpoint: string) => request(endpoint, { method: 'GET' }),
 
   post: (endpoint: string, body?: Record<string, unknown>) =>

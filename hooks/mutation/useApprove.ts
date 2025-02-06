@@ -1,5 +1,5 @@
-import { wagmiConfig } from "@/components/providers";
 import { denormalize, valueToBigInt } from "@/lib/bignumber";
+import { useWagmiConfig } from "@/lib/wagmi";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { erc20Abi } from "viem";
@@ -13,6 +13,8 @@ type Status = "idle" | "loading" | "success" | "error";
 
 export const useApprove = () => {
   const { address: userAddress } = useAccount();
+
+  const wagmiConfig = useWagmiConfig();
 
   const [steps, setSteps] = useState<
     Array<{

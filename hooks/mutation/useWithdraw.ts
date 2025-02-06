@@ -1,6 +1,6 @@
-import { wagmiConfig } from "@/components/providers";
 import { MockStakingABI } from "@/lib/abis/MockStakingABI";
 import { denormalize } from "@/lib/bignumber";
+import { useWagmiConfig } from "@/lib/wagmi";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { useAccount } from "wagmi";
@@ -13,6 +13,7 @@ type Status = "idle" | "loading" | "success" | "error";
 
 export const useBid = () => {
   const { address: userAddress } = useAccount();
+  const wagmiConfig = useWagmiConfig();
 
   const [steps, setSteps] = useState<
     Array<{

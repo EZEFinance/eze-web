@@ -3,70 +3,40 @@ import { Button } from "@heroui/button";
 import { Form } from "@heroui/form";
 import { Select, SelectItem } from "@heroui/select";
 import { dataForm } from "@/data/dataForm";
-import { UseMutationResult } from "@tanstack/react-query";
-import { dataClassify } from "@/data/dataClassify";
+import { useGenerateAI } from "@/hooks/mutation/api/useGenerateAI";
 
 interface FormData {
   [key: number]: number | null;
 }
 
-export default function QuestionnaireContent({
-  mgRisk,
-  mgStaking,
-  rgRisk
-}: {
-  mgRisk: UseMutationResult<{ risk: string }, unknown, { data: string }, unknown>;
-  mgStaking: UseMutationResult<
-    { response: { id_project: string }[]; thread_id: string; processing_time: number },
-    unknown,
-    { data: string },
-    unknown
-  >;
-  rgRisk?: string;
-}) {
+export default function QuestionnaireContent() {
   const [formData, setFormData] = useState<FormData>({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const { mutation } = useGenerateAI()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
 
-    try {
-      const hasEmptyAnswers = Object.values(formData).some(
-        (value) => value === null || value === undefined
-      );
+    const hasEmptyAnswers = Object.values(formData).some(
+      (value) => value === null || value === undefined
+    );
 
-      if (Object.keys(formData).length !== dataForm.questions.length || hasEmptyAnswers) {
-        alert("Please answer all questions");
-        return;
-      }
-
-      const formattedSubmission = Object.entries(formData)
-        .map(([questionIndex, answerIndex]) => {
-          const qIndex = parseInt(questionIndex);
-          return `${dataForm.questions[qIndex].question} = ${dataForm.questions[qIndex].options[answerIndex as number]
-            }`;
-        })
-        .join(". ");
-
-      await mgRisk.mutateAsync({
-        data: formattedSubmission,
-      });
-
-      const matchingClassification = dataClassify.find(
-        (item) => item.risk === rgRisk
-      );
-
-      if (matchingClassification?.prompt) {
-        await mgStaking.mutateAsync({
-          data: matchingClassification.prompt,
-        });
-      }
-    } catch (error) {
-      console.error("Error during submission:", error);
-    } finally {
-      setIsSubmitting(false);
+    if (Object.keys(formData).length !== dataForm.questions.length || hasEmptyAnswers) {
+      alert("Please answer all questions");
+      return;
     }
+
+    const formattedSubmission = Object.entries(formData)
+      .map(([questionIndex, answerIndex]) => {
+        const qIndex = parseInt(questionIndex);
+        return `${dataForm.questions[qIndex].question} = ${dataForm.questions[qIndex].options[answerIndex as number]
+          }`;
+      })
+      .join(". ");
+
+    mutation.mutate({
+      formattedSubmission
+    })
   };
 
   const handleChange = (index: number, value: string | null) => {
@@ -110,7 +80,7 @@ export default function QuestionnaireContent({
           type="submit"
           className="w-full py-2 px-4 rounded-md"
           color="primary"
-          disabled={isSubmitting || mgRisk.isPending || mgStaking.isPending}
+          disabled={mutation.isPending}
         >
           Submit
         </Button>
