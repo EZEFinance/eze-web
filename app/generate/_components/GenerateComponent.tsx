@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React from "react";
 import { Timeline } from "@/components/ui/timeline";
 import CreateWalletContent from "./CreateWalletContent";
 import QuestionnaireContent from "./QuestionnaireContent";
@@ -10,14 +10,7 @@ import { useAccount } from "wagmi";
 const GenerateComponent: React.FC = () => {
   const risk = localStorage.getItem("risk");
   const protocolId = localStorage.getItem("protocolId");
-  const { address, isConnected } = useAccount();
-
-  useEffect(() => {
-    const storedAddress = localStorage.getItem("address");
-    if (storedAddress && storedAddress.replace(/"/g, "") !== address) {
-      localStorage.clear();
-    }
-  }, [address]);
+  const { isConnected } = useAccount();
 
   const timelineData = [
     {

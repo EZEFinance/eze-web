@@ -71,10 +71,8 @@ export const useGenerateAI = () => {
           })
         );
 
-        setSteps([{ step: 2, status: "idle" }]);
-
         const matchingClassification = dataClassify.find(
-          (item) => item.risk === risk);
+          (item) => item.risk === response.risk);
 
         setSteps((prev) =>
           prev.map((item) => {
