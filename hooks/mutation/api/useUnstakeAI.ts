@@ -4,7 +4,7 @@ import apiAgent from "@/lib/api-agent";
 
 type Status = "idle" | "loading" | "success" | "error";
 
-export const useStakeAI = () => {
+export const useUnstakeAI = () => {
   const [steps, setSteps] = useState<
     Array<{
       step: number;
@@ -18,24 +18,15 @@ export const useStakeAI = () => {
   const mutation = useMutation({
     mutationFn: async ({
       user_address,
-      asset_id,
       protocol,
-      spender,
-      amount
     }: {
       user_address: string
-      asset_id: string
       protocol: string
-      spender: string
-      amount: string
     }) => {
       setSteps([{ step: 1, status: "loading" }]);
-      const response = await apiAgent.post("action/stake", {
+      const response = await apiAgent.post("action/unstake", {
         user_address: user_address,
-        asset_id: asset_id,
         protocol: protocol,
-        spender: spender,
-        amount: amount
       });
       return response;
     },

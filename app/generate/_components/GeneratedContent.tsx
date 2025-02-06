@@ -2,7 +2,7 @@ import { Button } from "@heroui/button";
 import { Image } from '@heroui/image'
 import { Card } from '@heroui/card'
 import { Chip } from '@heroui/chip'
-import { ArrowDown, ChartArea, DollarSign } from 'lucide-react'
+import { ArrowDown, ChartArea, DollarSign, Loader2 } from 'lucide-react'
 import { formatPercent, formatUSD, normalizeAPY } from '@/lib/helper'
 import { useStaking } from "@/hooks/query/useStaking";
 import { Staking } from "@/types/staking";
@@ -12,6 +12,8 @@ import { useAccount } from "wagmi";
 import Loading from "@/components/loader/loading";
 import { useAccountBalanceAI } from "@/hooks/query/useAccountBalanceAI";
 import { DECIMALS_MOCK_TOKEN } from "@/lib/constants";
+import ModalTransactionCustom from "@/components/modal/modal-transaction-custom";
+import ModalStake from "@/components/modal/modal-stake";
 
 export default function GeneratedContent({
   risk,
@@ -21,8 +23,10 @@ export default function GeneratedContent({
   protocolId: string;
 }) {
   const { sData } = useStaking();
-  const { mutation } = useStakeAI();
+  const { mutation, result } = useStakeAI();
   const { address } = useAccount();
+
+  const [isModalTransactionOpen, setIsModalTransactionOpen] = useState<boolean>(false);
 
   const [curStaking, setCurStaking] = useState<Staking | null>(null);
   const { bNormalized } = useAccountBalanceAI({ token: curStaking?.addressToken as HexAddress, decimal: DECIMALS_MOCK_TOKEN });
@@ -37,20 +41,33 @@ export default function GeneratedContent({
     setCurStaking(findStaking || null);
   }, [sData, protocolId]);
 
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [amountStaked, setAmountStaked] = useState<string>("0");
+
   const handleStake = () => {
     mutation.mutate({
       user_address: address!,
       asset_id: curStaking?.nameToken.toLowerCase() || '',
       protocol: curStaking?.nameProject?.toLowerCase() || '',
       spender: curStaking?.addressStaking || "",
-      amount: "1000",
+      amount: amountStaked,
+    }, {
+      onSuccess: () => {
+        setIsModalTransactionOpen(true);
+      }
     })
   }
 
-  if (mutation.isPending) return <Loading />
+  const handleConfirmStake = () => {
+    handleStake();
+    setIsModalOpen(false);
+  };
+
+  const closeModalTransaction = () => setIsModalTransactionOpen(false);
 
   return (
     <div className="max-w-sm md:max-w-6xl">
+      {(mutation.isPending) && <Loading />}
       <p className="text-neutral-800 dark:text-neutral-200 text-sm md:text-lg font-normal mb-4">
         You classified as <span className="font-semibold">{risk}</span> risk. here&apos;s our recommended staking option:
       </p>
@@ -100,25 +117,37 @@ export default function GeneratedContent({
               </div>
             </div>
 
-            <Button variant="flat" color="success">
-              <span>You have:</span>
-              <Image src={curStaking.logo} alt="token" className="w-5 h-5 min-w-5 min-h-5" />
-              {bNormalized && bNormalized}
-            </Button>
-
             <div className="flex gap-2 md:ml-auto">
               <Button
                 variant="bordered"
                 className="flex-1 md:flex-none flex items-center justify-center gap-2"
-                onPress={handleStake}
+                onPress={() => setIsModalOpen(true)}
+                disabled={mutation.isPending}
               >
-                <span>Stake</span>
+                {mutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <span>Stake</span>}
                 <ArrowDown className="w-4 h-4" />
               </Button>
             </div>
           </div>
         </Card>
       )}
+      <ModalStake
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={handleConfirmStake}
+        amount={amountStaked}
+        setAmount={setAmountStaked}
+        tokenName={curStaking?.nameToken || ""}
+        isLoading={mutation.isPending}
+        maxAmount={bNormalized}
+      />
+      <ModalTransactionCustom
+        isOpen={isModalTransactionOpen}
+        setIsOpen={closeModalTransaction}
+        status={mutation.status || ""}
+        data={result?.txhash || ""}
+        name='stake'
+      />
     </div>
   )
 }

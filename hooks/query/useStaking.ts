@@ -2,7 +2,7 @@ import { StakingList } from "@/types/staking"
 import { useQuery } from "@tanstack/react-query"
 
 export const useStaking = () => {
-  const { data: sData, isLoading: sLoading } = useQuery<StakingList>({
+  const { data: sData, isLoading: sLoading, refetch: sRefetch } = useQuery<StakingList>({
     queryKey: ["staking"],
     queryFn: async () => {
       const response = await fetch(`/api/staking`)
@@ -13,5 +13,5 @@ export const useStaking = () => {
     }
   })
 
-  return { sData, sLoading }
+  return { sData, sLoading, sRefetch }
 }

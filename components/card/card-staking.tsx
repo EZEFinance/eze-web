@@ -1,26 +1,33 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '@heroui/button';
 import { Card } from '@heroui/card';
-import { ChartArea, DollarSign, ArrowDown, ArrowUp, ExternalLink, Clock, Calendar } from 'lucide-react';
+import { ChartArea, DollarSign, ArrowDown, ArrowUp, ExternalLink, Clock, Calendar, Loader2 } from 'lucide-react';
 import { Tooltip } from '@heroui/tooltip';
 import { formatPercent, formatUSD, normalizeAPY } from '@/lib/helper';
 import { urlSepoliaBasescan } from '@/lib/utils';
 import { StakingPosition } from '@/types/staking';
 import { Image } from '@heroui/image';
 import { Chip } from '@heroui/chip';
+import { useUnstakeAI } from '@/hooks/mutation/api/useUnstakeAI';
+import { useAccount } from 'wagmi';
+import ModalTransactionCustom from '../modal/modal-transaction-custom';
+import { useStakeAI } from '@/hooks/mutation/api/useStakeAI';
+import ModalStake from '../modal/modal-stake';
+import { useAccountBalanceAI } from '@/hooks/query/useAccountBalanceAI';
+import { DECIMALS_MOCK_TOKEN } from '@/lib/constants';
 
-const StatItem = ({ 
-  icon: Icon, 
-  label, 
-  value, 
-  subValue, 
-  className = "" 
-}: { 
-  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>, 
-  label: string, 
-  value: string | number, 
+const StatItem = ({
+  icon: Icon,
+  label,
+  value,
+  subValue,
+  className = ""
+}: {
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>,
+  label: string,
+  value: string | number,
   subValue?: string,
-  className?: string 
+  className?: string
 }) => (
   <div className={`rounded-lg  ${className}`}>
     <div className="flex items-center gap-2 mb-2">
@@ -36,11 +43,62 @@ const StatItem = ({
   </div>
 );
 
-const CardStaking = ({ pool }: { pool: StakingPosition }) => {
+const CardStaking = ({ pool }: { pool: StakingPosition; sRefetch: () => void }) => {
+  const { address } = useAccount();
+
+  const [isModalStakeOpen, setIsModalStakeOpen] = useState<boolean>(false);
+  const [isModalUnstakeOpen, setIsModalUnstakeOpen] = useState<boolean>(false);
+  const closeModalStake = () => setIsModalStakeOpen(false);
+  const closeModalUnstake = () => setIsModalUnstakeOpen(false);
+
   const now = new Date().getTime() / 1000;
   const durationStaked = now - pool.registrationTimestamp;
   const durationInHours = Math.floor(durationStaked / 3600);
   const durationInDays = Math.floor(durationStaked / 86400);
+
+  const { mutation: mStakeAI, result: rStakeAI } = useStakeAI();
+  const { mutation: mUnstakeAI, result: rUnstakeAI } = useUnstakeAI();
+
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [amountStaked, setAmountStaked] = useState<string>("0");
+
+  const { bNormalized } = useAccountBalanceAI({ token: pool.pool.addressToken as HexAddress, decimal: DECIMALS_MOCK_TOKEN });
+
+  const handleStake = () => {
+    mStakeAI.mutate({
+      user_address: address as HexAddress,
+      asset_id: pool.pool.nameToken.toLowerCase(),
+      protocol: pool.pool.nameProject.toLowerCase(),
+      spender: pool.pool.addressStaking,
+      amount: amountStaked,
+    }, {
+      onSuccess: () => {
+        setIsModalStakeOpen(true)
+        if (isModalStakeOpen === false) {
+          window.location.reload()
+        }
+      }
+    })
+  }
+
+  const handleConfirmStake = () => {
+    handleStake();
+    setIsModalOpen(false);
+  };
+
+  const handleUnstake = () => {
+    mUnstakeAI.mutate({
+      user_address: address as HexAddress,
+      protocol: pool.pool.nameProject.toLowerCase()
+    }, {
+      onSuccess: () => {
+        setIsModalUnstakeOpen(true)
+        if (isModalUnstakeOpen === false) {
+          window.location.reload()
+        }
+      }
+    })
+  }
 
   return (
     <Card className="p-6 shadow-lg hover:shadow-xl transition-all bg-background/50 duration-300">
@@ -65,9 +123,9 @@ const CardStaking = ({ pool }: { pool: StakingPosition }) => {
 
           <div className="flex flex-wrap gap-2 md:ml-auto">
             {pool.pool.categories.map((category, idx) => (
-              <Chip 
-                key={idx} 
-                variant="flat" 
+              <Chip
+                key={idx}
+                variant="flat"
                 className="capitalize px-3 py-1 bg-primary/10 text-primary hover:bg-primary/20 transition-colors duration-200"
               >
                 {category.replace('-', ' ')}
@@ -116,8 +174,10 @@ const CardStaking = ({ pool }: { pool: StakingPosition }) => {
             <Button
               className="min-h-12 flex-1"
               color='primary'
+              onPress={() => setIsModalOpen(true)}
+              disabled={mStakeAI.isPending}
             >
-              <span>Stake More</span>
+              {mStakeAI.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <span>Stake</span>}
               <ArrowDown className="w-4 h-4" />
             </Button>
           </Tooltip>
@@ -126,8 +186,10 @@ const CardStaking = ({ pool }: { pool: StakingPosition }) => {
               variant="bordered"
               className="min-h-12 flex-1"
               color='warning'
+              disabled={mUnstakeAI.isPending}
+              onPress={handleUnstake}
             >
-              <span>Withdraw</span>
+              {mUnstakeAI.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <span>Unstake</span>}
               <ArrowUp className="w-4 h-4" />
             </Button>
           </Tooltip>
@@ -142,6 +204,30 @@ const CardStaking = ({ pool }: { pool: StakingPosition }) => {
           </Tooltip>
         </div>
       </div>
+      <ModalTransactionCustom
+        isOpen={isModalStakeOpen}
+        setIsOpen={closeModalStake}
+        status={mStakeAI.status || ""}
+        data={rStakeAI?.txhash || ""}
+        name='stake'
+      />
+      <ModalTransactionCustom
+        isOpen={isModalUnstakeOpen}
+        setIsOpen={closeModalUnstake}
+        status={mUnstakeAI.status || ""}
+        data={rUnstakeAI?.txhash || ""}
+        name='unstake'
+      />
+      <ModalStake
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={handleConfirmStake}
+        amount={amountStaked}
+        setAmount={setAmountStaked}
+        tokenName={pool.pool.nameToken}
+        isLoading={mStakeAI.isPending}
+        maxAmount={bNormalized}
+      />
     </Card>
   );
 };

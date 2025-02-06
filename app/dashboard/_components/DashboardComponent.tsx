@@ -14,7 +14,7 @@ import { DECIMALS_MOCK_TOKEN } from '@/lib/constants';
 import { Staking, StakingPositionList } from '@/types/staking';
 
 export default function DashboardComponent() {
-  const { sData } = useStaking();
+  const { sData, sRefetch } = useStaking();
   const [isAIWallet, setIsAIWallet] = useState(false);
   const { addressAI } = useAddressAI();
   const wagmiConfig = useWagmiConfig();
@@ -59,7 +59,7 @@ export default function DashboardComponent() {
       {isAIWallet && (
         <div className="flex flex-col gap-4 w-full">
           {combinedStakingData?.map((pool, idx) => (
-            <CardStaking key={idx} pool={pool} />
+            <CardStaking key={idx} pool={pool} sRefetch={sRefetch}/>
           ))}
         </div>
       )}

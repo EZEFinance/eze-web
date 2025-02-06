@@ -68,7 +68,7 @@ export default function QuestionnaireContent() {
               value={formData[index]?.toString() || ""}
             >
               {q.options.map((option, optIndex) => (
-                <SelectItem key={optIndex} value={optIndex.toString()} aria-required aria-label="Select an option">
+                <SelectItem key={optIndex} value={optIndex.toString()} aria-required aria-label={q.question} aria-labelledby={`question-${index}`}>
                   {option}
                 </SelectItem>
               ))}
