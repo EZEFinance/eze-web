@@ -4,13 +4,13 @@ import React from "react";
 import { Timeline } from "@/components/ui/timeline";
 import CreateWalletContent from "./CreateWalletContent";
 import QuestionnaireContent from "./QuestionnaireContent";
-import { useClassifyAI } from "@/hooks/mutation/api/useClassifyAI";
 import GeneratedContent from "./GeneratedContent";
-import { useGenerateStaking } from "@/hooks/mutation/api/useGenerateStakingAI";
+import { useGenerateRiskAI } from "@/hooks/mutation/api/useGenerateRiskAI";
+import { useGenerateStakingAI } from "@/hooks/mutation/api/useGenerateStakingAI";
 
 const GenerateComponent = () => {
-  const { mutation: mClassify, result: rClassify } = useClassifyAI();
-  const { mutation: mGenerate, result: rGenerate } = useGenerateStaking();
+  const { mutation: mgRisk, result: rgRisk } = useGenerateRiskAI();
+  const { mutation: mgStaking, result: rgStaking } = useGenerateStakingAI();
 
   const timelineData = [
     {
@@ -22,13 +22,22 @@ const GenerateComponent = () => {
     {
       title: "Fill Questionnaire",
       content: (
-        <QuestionnaireContent mClassify={mClassify} mGenerate={mGenerate}/>
+        <QuestionnaireContent mgRisk={mgRisk} mgStaking={mgStaking} rgRisk={rgRisk?.risk}/>
       ),
     },
     {
       title: "Generated Content",
       content: (
-        <GeneratedContent />
+        <>
+          {rgRisk && rgStaking ? (
+            <GeneratedContent risk={rgRisk?.risk || ""} protocolId={rgStaking?.response[0].id_project} />
+          ) : (
+            <p className="text-neutral-800 dark:text-neutral-200 text-sm md:text-lg font-normal mb-4">
+              You need to fill the questionnaire first.
+            </p>
+          )
+          }
+        </>
       )
     },
   ];

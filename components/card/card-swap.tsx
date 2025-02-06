@@ -14,7 +14,7 @@ import { useAccountBalance } from '@/hooks/query/useAccountBalance';
 import ButtonSwap from '../button/button-swap';
 
 interface Token {
-  id: string;
+  idProtocol: string;
   addressToken: string;
   nameToken: string;
   logo: string;
@@ -53,11 +53,11 @@ const SwapCard: React.FC = () => {
 
   const handleTokenSelect = (token: Token) => {
     if (isTokenModalOpen === 'from') {
-      if (token.id !== toToken?.id) {
+      if (token.idProtocol !== toToken?.idProtocol) {
         setFromToken(token);
       }
     } else if (isTokenModalOpen === 'to') {
-      if (token.id !== fromToken?.id) {
+      if (token.idProtocol !== fromToken?.idProtocol) {
         setToToken(token);
       }
     }
@@ -211,16 +211,16 @@ const SwapCard: React.FC = () => {
           </ModalHeader>
           <ModalBody>
             <div className="grid grid-cols-2 gap-4">
-              {sData && sData.map(token => (
+              {sData && sData.map((token, idx) => (
                 <Button
-                  key={token.id}
+                  key={idx}
                   variant="bordered"
                   color="default"
                   onPress={() => handleTokenSelect(token)}
                   className="flex flex-row justify-center items-center p-3"
                   isDisabled={
-                    (isTokenModalOpen === 'from' && token.id === toToken?.id) ||
-                    (isTokenModalOpen === 'to' && token.id === fromToken?.id)
+                    (isTokenModalOpen === 'from' && token.idProtocol === toToken?.idProtocol) ||
+                    (isTokenModalOpen === 'to' && token.idProtocol === fromToken?.idProtocol)
                   }
                 >
                   <Avatar

@@ -1,11 +1,11 @@
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import apiAgent from "@/lib/api-agent";
-import { ClassifyResponse } from "@/types/api/classify";
+import { GenerateStakingResponse } from "@/types/api/generate-staking";
 
 type Status = "idle" | "loading" | "success" | "error";
 
-export const useGenerateStaking = () => {
+export const useGenerateStakingAI = () => {
   const [steps, setSteps] = useState<
     Array<{
       step: number;
@@ -14,13 +14,14 @@ export const useGenerateStaking = () => {
     }>
   >([{ step: 1, status: "idle" }]);
 
-  const [result, setResult] = useState<ClassifyResponse | null>(null);
+  const [result, setResult] = useState<GenerateStakingResponse | null>(null);
 
   const mutation = useMutation({
-    mutationFn: async ({ query }: { query: string }) => {
+    mutationFn: async ({ data }: { data: string }) => {
       setSteps([{ step: 1, status: "loading" }]);
-      const response = await apiAgent.post("query", { query });
-      return response.data as ClassifyResponse;
+      const response = await apiAgent.post("query", { data: data });
+      setResult(response.data as GenerateStakingResponse);
+      return response.data as GenerateStakingResponse;
     },
     onSuccess: (data) => {
       setResult(data);

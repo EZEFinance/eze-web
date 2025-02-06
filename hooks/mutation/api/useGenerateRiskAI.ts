@@ -1,11 +1,11 @@
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import apiAgent from "@/lib/api-agent";
-import { ClassifyResponse } from "@/types/api/classify";
+import { GenerateRiskResponse } from "@/types/api/generate-risk";
 
 type Status = "idle" | "loading" | "success" | "error";
 
-export const useClassifyAI = () => {
+export const useGenerateRiskAI = () => {
   const [steps, setSteps] = useState<
     Array<{
       step: number;
@@ -14,13 +14,14 @@ export const useClassifyAI = () => {
     }>
   >([{ step: 1, status: "idle" }]);
 
-  const [result, setResult] = useState<ClassifyResponse | null>(null);
+  const [result, setResult] = useState<GenerateRiskResponse | null>(null);
 
   const mutation = useMutation({
     mutationFn: async ({ data }: { data: string }) => {
       setSteps([{ step: 1, status: "loading" }]);
-      const response = await apiAgent.post("url api bang", { data });
-      return response.data as ClassifyResponse;
+      const response = await apiAgent.post("generate-risk-profile", { data: data });
+      setResult(response.data as GenerateRiskResponse);
+      return response.data as GenerateRiskResponse;
     },
     onSuccess: (data) => {
       setResult(data);

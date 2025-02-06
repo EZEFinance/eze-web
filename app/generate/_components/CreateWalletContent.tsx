@@ -21,8 +21,6 @@ export default function CreateWalletContent() {
     setIsModalOpen(false);
   }, []);
 
-  console.log("rCreateWallet = ", rCreateWallet)
-
   return (
     <div className="flex flex-col gap-4">
       <p className="text-neutral-800 dark:text-neutral-200 text-sm md:text-lg font-normal">

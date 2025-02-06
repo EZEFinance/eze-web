@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const ClassifyResponseSchema = z.object({
+export const GenerateStakingResponseSchema = z.object({
   response: z.array(
     z.object({
       id_project: z.string(),
@@ -10,4 +10,4 @@ export const ClassifyResponseSchema = z.object({
   processing_time: z.number(),
 });
 
-export type ClassifyResponse = z.infer<typeof ClassifyResponseSchema>;
+export type GenerateStakingResponse = z.infer<typeof GenerateStakingResponseSchema>;

@@ -20,6 +20,7 @@ export const useCreateWalletAI = () => {
     mutationFn: async ({ user_address }: { user_address: string }) => {
       setSteps([{ step: 1, status: "loading" }]);
       const response = await apiAgent.post("action/create-wallet", { user_address: user_address });
+      setResult(response.data as CreateWalletResponse);
       return response.data as CreateWalletResponse;
     },
     onSuccess: (data) => {

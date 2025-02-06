@@ -18,8 +18,8 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <HeroUINavbar maxWidth="full" position="sticky" className="bg-transparent backdrop-saturate-100" isMenuOpen={isMenuOpen} onMenuOpenChange={setIsMenuOpen}>
-      <NavbarContent className="basis-1/5 xl:basis-full hidden xl:flex xl:flex-row items-center" justify="start">
+    <HeroUINavbar maxWidth="full" position="static" className="bg-transparent backdrop-saturate-100 z-[100]" isMenuOpen={isMenuOpen} onMenuOpenChange={setIsMenuOpen}>
+      <NavbarContent className="basis-1/5 xl:basis-full hidden xl:flex xl:flex-row items-center backdrop-blur-sm" justify="start">
         <Link href="/home" title="Home">
           <Image src="/logo.png" alt="logo" className="min-w-11 min-h-11 w-11 h-11 rounded-full ring-1 p-1 ring-gray-600" width={50} height={50} />
         </Link>
