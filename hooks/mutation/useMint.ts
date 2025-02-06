@@ -1,6 +1,6 @@
-import { wagmiConfig } from "@/components/providers";
 import { MockTokenABI } from "@/lib/abis/MockTokenABI";
 import { denormalize, valueToBigInt } from "@/lib/bignumber";
+import { useWagmiConfig } from "@/lib/wagmi";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { useAccount } from "wagmi";
@@ -28,6 +28,8 @@ export const useMint = () => {
   ]);
 
   const [txHash, setTxHash] = useState<HexAddress | null>(null);
+
+  const wagmiConfig = useWagmiConfig();
 
   const mutation = useMutation({
     mutationFn: async ({
