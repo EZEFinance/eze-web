@@ -2,13 +2,10 @@ import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import apiAgent from "@/lib/api-agent";
 import { CreateWalletResponse } from "@/types/api/create-wallet";
-import { useAccount } from "wagmi";
 
 type Status = "idle" | "loading" | "success" | "error";
 
-export const useCreateWalletAI = () => {
-  const { address } = useAccount();
-
+export const useStakeAI = () => {
   const [steps, setSteps] = useState<
     Array<{
       step: number;
@@ -20,10 +17,27 @@ export const useCreateWalletAI = () => {
   const [result, setResult] = useState<CreateWalletResponse | null>(null);
 
   const mutation = useMutation({
-    mutationFn: async ({ user_address }: { user_address: string }) => {
+    mutationFn: async ({ 
+      user_address,
+      asset_id,
+      protocol,
+      spender,
+      amount
+    }: { 
+      user_address: string 
+      asset_id: string
+      protocol: string
+      spender: string
+      amount: string
+    }) => {
       setSteps([{ step: 1, status: "loading" }]);
-      const response = await apiAgent.post("action/create-wallet", { user_address: user_address });
-      apiAgent.post("action/get-eth-faucet", { user_address: address });
+      const response = await apiAgent.post("action/stake", { 
+        user_address: user_address ,
+        asset_id: asset_id,
+        protocol: protocol,
+        spender: spender,
+        amount: amount
+      });
       return response as CreateWalletResponse;
     },
     onSuccess: (data) => {

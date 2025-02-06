@@ -7,6 +7,11 @@ import { formatPercent, formatUSD, normalizeAPY } from '@/lib/helper'
 import { useStaking } from "@/hooks/query/useStaking";
 import { Staking } from "@/types/staking";
 import { useEffect, useState } from "react";
+import { useStakeAI } from "@/hooks/mutation/api/useStakeAI";
+import { useAccount } from "wagmi";
+import Loading from "@/components/loader/loading";
+import { useAccountBalanceAI } from "@/hooks/query/useAccountBalanceAI";
+import { DECIMALS_MOCK_TOKEN } from "@/lib/constants";
 
 export default function GeneratedContent({
   risk,
@@ -16,29 +21,43 @@ export default function GeneratedContent({
   protocolId: string;
 }) {
   const { sData } = useStaking();
+  const { mutation } = useStakeAI();
+  const { address } = useAccount();
 
   const [curStaking, setCurStaking] = useState<Staking | null>(null);
+  const { bNormalized } = useAccountBalanceAI({ token: curStaking?.addressToken as HexAddress, decimal: DECIMALS_MOCK_TOKEN });
 
   useEffect(() => {
     if (!sData) return;
-    
+
     const findStaking = sData.find((item) => {
-      console.log("Comparing:", item.idProtocol?.trim(), protocolId?.trim());
       return item.idProtocol?.trim() === protocolId.replace(/"/g, "")
     });
-  
+
     setCurStaking(findStaking || null);
   }, [sData, protocolId]);
 
+  const handleStake = () => {
+    mutation.mutate({
+      user_address: address!,
+      asset_id: curStaking?.nameToken.toLowerCase() || '',
+      protocol: curStaking?.nameProject?.toLowerCase() || '',
+      spender: curStaking?.addressStaking || "",
+      amount: "1000",
+    })
+  }
+
+  if (mutation.isPending) return <Loading />
+
   return (
-    <div>
+    <div className="max-w-sm md:max-w-6xl">
       <p className="text-neutral-800 dark:text-neutral-200 text-sm md:text-lg font-normal mb-4">
         You classified as <span className="font-semibold">{risk}</span> risk. here&apos;s our recommended staking option:
       </p>
       {sData && curStaking && (
         <Card className="p-4 bg-background/50">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:gap-6">
-            <div className="flex items-center gap-4 min-w-44">
+            <div className="flex items-center gap-4 min-w-24 justify-center">
               <Image
                 src={sData && curStaking?.logo}
                 alt={sData && curStaking?.nameToken}
@@ -52,7 +71,7 @@ export default function GeneratedContent({
               </div>
             </div>
 
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2 items-center justify-center">
               {sData && curStaking?.categories.map((category: string, idx: number) => (
                 <Chip key={idx} variant='bordered' color='primary' className='text-xs px-1'>
                   {category.replace('-', ' ')}
@@ -70,21 +89,28 @@ export default function GeneratedContent({
                   {formatPercent(normalizeAPY(sData && curStaking?.apy))}
                 </p>
               </div>
-              <div>
-                <div className="flex items-center gap-2">
+              <div className="">
+                <div className="flex items-center gap-2 justify-end md:justify-start">
                   <DollarSign className="w-4 h-4" />
                   <span className="text-sm font-medium text-slate-600">TVL</span>
                 </div>
-                <p className="text-lg font-bold">
+                <p className="text-lg font-bold text-end md:text-start">
                   {formatUSD(normalizeAPY(sData && curStaking?.tvl))}
                 </p>
               </div>
             </div>
 
+            <Button variant="flat" color="success">
+              <span>You have:</span>
+              <Image src={curStaking.logo} alt="token" className="w-5 h-5 min-w-5 min-h-5" />
+              {bNormalized && bNormalized}
+            </Button>
+
             <div className="flex gap-2 md:ml-auto">
               <Button
                 variant="bordered"
                 className="flex-1 md:flex-none flex items-center justify-center gap-2"
+                onPress={handleStake}
               >
                 <span>Stake</span>
                 <ArrowDown className="w-4 h-4" />

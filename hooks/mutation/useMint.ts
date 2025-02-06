@@ -1,5 +1,6 @@
 import { MockTokenABI } from "@/lib/abis/MockTokenABI";
 import { denormalize, valueToBigInt } from "@/lib/bignumber";
+import { DECIMALS_MOCK_TOKEN } from "@/lib/constants";
 import { useWagmiConfig } from "@/lib/wagmi";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
@@ -34,22 +35,19 @@ export const useMint = () => {
   const mutation = useMutation({
     mutationFn: async ({
       addressToken,
-      amount,
-      decimals
+      amount
     }: {
       addressToken: HexAddress;
       amount: string;
-      decimals: number;
     }) => {
       try {
-        // Reset steps
         setSteps([{ step: 1, status: "idle" }]);
 
         if (!amount || !userAddress) {
           throw new Error("Invalid parameters");
         }
 
-        const dAmount = denormalize(amount || "0", decimals);
+        const dAmount = denormalize(amount || "0", DECIMALS_MOCK_TOKEN);
 
         setSteps((prev) =>
           prev.map((item) => {

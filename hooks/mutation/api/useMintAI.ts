@@ -1,10 +1,14 @@
 import { useMutation } from "@tanstack/react-query";
-import api from "@/lib/api-agent";
+import apiAgent from "@/lib/api-agent";
 import { useState } from "react";
+import { useAccount } from "wagmi";
 
 type Status = "idle" | "loading" | "success" | "error";
 
 export const useMintAI = () => {
+  const { address } = useAccount();
+  const [result, setResult] = useState<{ txhash: string } | null>(null);
+
   const [steps, setSteps] = useState<
     Array<{
       step: number;
@@ -20,9 +24,11 @@ export const useMintAI = () => {
 
   const mutation = useMutation({
     mutationFn: async ({
-      query
+      asset_id,
+      amount,
     }: {
-      query: string;
+      asset_id: string;
+      amount: string;
     }) => {
       try {
         setSteps([{ step: 1, status: "idle" }]);
@@ -36,7 +42,8 @@ export const useMintAI = () => {
           })
         );
 
-        const result = api.post("api/v1/categories", { query: query });
+        const result = await apiAgent.post("action/mint", { user_address: address, asset_id: asset_id, amount: amount });
+        setResult(result);
 
         setSteps((prev) =>
           prev.map((item) => {
@@ -65,5 +72,5 @@ export const useMintAI = () => {
     },
   });
 
-  return { steps, mutation };
+  return { steps, mutation, result };
 };
