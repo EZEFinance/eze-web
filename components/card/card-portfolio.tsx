@@ -4,13 +4,23 @@ import { useCurAccount } from '@/hooks/query/useCurAccount';
 import { Image } from '@heroui/image';
 import { Skeleton } from '@heroui/skeleton';
 import { Button } from '@heroui/button';
-import { CheckCircle, Copy, ExternalLink } from 'lucide-react';
+import { CheckCircle, Copy, ExternalLink, Wallet } from 'lucide-react';
 import { Chip } from '@heroui/chip';
 import { WalletComponents } from '../wallet';
 import ModalListToken from '../modal/modal-list-token';
+import { useCurAIAccount } from '@/hooks/query/useCurAIAccount';
+import { truncateAddress } from '@/lib/helper';
+import ModalListTokenAI from '../modal/modal-list-token-ai';
 
-export default function CardPortfolio() {
+export default function CardPortfolio({
+  isAIWallet,
+  setIsAIWallet
+}: {
+  isAIWallet: boolean
+  setIsAIWallet: (value: boolean) => void
+}) {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [isModalOpenAI, setIsModalOpenAI] = useState<boolean>(false);
   const [copied, setCopied] = useState(false);
 
   const {
@@ -21,24 +31,40 @@ export default function CardPortfolio() {
     isLoading: isAccountLoading
   } = useCurAccount();
 
+  const {
+    curAddressAI,
+    curAvatarAI,
+    isLoadingAI: isAccountLoadingAI
+  } = useCurAIAccount();
+
   const handleCopyAddress = () => {
-    if (curAddress) {
-      navigator.clipboard.writeText(curAddress);
+    const addressToCopy = isAIWallet ? curAddressAI : curAddress;
+    if (addressToCopy) {
+      navigator.clipboard.writeText(addressToCopy);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }
   };
 
   const getAddressDisplay = () => {
-    if (!curAddress) return '';
-    return `${curAddress.slice(0, 6)}...${curAddress.slice(-4)}`;
+    const addressToDisplay = isAIWallet ? curAddressAI : curAddress;
+    if (!addressToDisplay) return '';
+    return `${addressToDisplay.slice(0, 6)}...${addressToDisplay.slice(-4)}`;
   };
 
   const closeModal = useCallback(() => {
     setIsModalOpen(false);
   }, []);
 
-  if (isAccountLoading) {
+  const closeModalAI = useCallback(() => {
+    setIsModalOpenAI(false);
+  }, []);
+
+  const handleSwitchWallet = () => {
+    setIsAIWallet(!isAIWallet);
+  };
+
+  if (isAccountLoading || isAccountLoadingAI) {
     return (
       <Card className="w-full bg-background/50 p-10 gap-10">
         <Skeleton className="rounded-lg">
@@ -71,15 +97,17 @@ export default function CardPortfolio() {
               <div className="relative group">
                 <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full opacity-75 blur group-hover:opacity-100 transition duration-300" />
                 <Image
-                  src={curAvatar || "/default-avatar.svg"}
-                  alt={curName}
+                  src={isAIWallet ? (curAvatarAI || "/default-avatar.svg") : (curAvatar || "/default-avatar.svg")}
+                  alt={isAIWallet ? curAddressAI : curName}
                   className="relative w-24 h-24 rounded-full border-2 border-gray-700 object-cover"
                 />
               </div>
 
               <div className="text-center">
                 <CardHeader className="p-0">
-                  <h3 className="text-2xl font-bold text-white">{curName}</h3>
+                  <h3 className="text-2xl font-bold text-white">
+                    {isAIWallet ? truncateAddress(curAddressAI) : curName || truncateAddress(curAddress as HexAddress)}
+                  </h3>
                 </CardHeader>
                 <span className={`inline-flex items-center px-3 py-1 mt-2 rounded-full text-sm font-medium ${isDisconnected
                   ? 'bg-red-500/10 text-red-400 border border-red-500/20'
@@ -118,7 +146,12 @@ export default function CardPortfolio() {
                       <Button
                         variant="bordered"
                         size="sm"
-                        onPress={() => window.open(`https://basescan.org/address/${curAddress}`, '_blank')}
+                        onPress={() =>
+                          window.open(
+                            `https://basescan.org/address/${isAIWallet ? curAddressAI : curAddress}`,
+                            '_blank'
+                          )
+                        }
                         className="text-gray-400 hover:text-white rounded-full min-w-10 min-h-10"
                       >
                         <ExternalLink className="h-4 w-4" />
@@ -131,21 +164,40 @@ export default function CardPortfolio() {
                   <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
                     <span className="text-sm text-gray-400">List Token</span>
                     <div className="flex items-center gap-2">
-                      <Button color='primary' variant='flat' size='sm' className="w-full" onPress={() => setIsModalOpen(true)}>
+                      <Button
+                        color='primary'
+                        variant='flat'
+                        size='sm'
+                        className="w-full"
+                        onPress={isAIWallet ? () => setIsModalOpenAI(true) : () => setIsModalOpen(true)}
+                      >
                         View Token
                       </Button>
                     </div>
                   </div>
                 </div>
 
+                <ModalListTokenAI
+                  isOpen={isModalOpenAI}
+                  setIsOpen={closeModalAI}
+                />
+
                 <ModalListToken
                   isOpen={isModalOpen}
                   setIsOpen={closeModal}
                 />
 
-                <Button color='primary' variant='solid' size='lg' className="w-full">
-                  Switch to AI Wallet
+                <Button
+                  color='primary'
+                  variant='solid'
+                  size='lg'
+                  className="w-full flex items-center gap-2"
+                  onPress={handleSwitchWallet}
+                >
+                  <Wallet className="h-4 w-4" />
+                  {isAIWallet ? 'Switch to Main Wallet' : 'Switch to AI Wallet'}
                 </Button>
+                <Chip variant='flat' color='secondary'>Note: Switch to AI Wallet to see your staking data.</Chip>
               </div>
             )}
           </div>

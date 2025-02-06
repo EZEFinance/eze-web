@@ -3,14 +3,12 @@ import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import apiAgent from "@/lib/api-agent";
 import React from "react";
-import { useAccount } from "wagmi";
 
 type Status = "idle" | "loading" | "success" | "error";
 
 export const useGenerateAI = () => {
   const [risk, setRisk] = React.useState<string | null>(null);
   const [protocolId, setProtocolId] = React.useState<string | null>(null);
-  const { address } = useAccount();
 
   React.useEffect(() => {
     const storedRisk = localStorage.getItem("risk");
@@ -96,8 +94,6 @@ export const useGenerateAI = () => {
             return item;
           })
         );
-
-        localStorage.setItem("address", address?.toString() || "");
       } catch (e) {
         console.error("Bid Error", e);
 

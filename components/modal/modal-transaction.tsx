@@ -44,7 +44,7 @@ export default function ModalTransaction({
               <span>Your {name} is {status}, you can see transaction hash below:</span>
               <span className='text-center'>Transaction Hash:</span>
               {data && data?.transactionReceipts.map((tx: { transactionHash: string }, idx: number) => (
-                <Snippet variant='flat' color="success" className='line-clamp-1 w-auto' key={idx}>
+                <Snippet variant='flat' color="success" hideSymbol className='line-clamp-1 w-auto' key={idx}>
                   {tx && tx.transactionHash.length > 20 ? `${tx?.transactionHash.substring(0, 30)}...` : tx?.transactionHash}
                 </Snippet>
               ))}

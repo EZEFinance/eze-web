@@ -57,7 +57,7 @@ const  CardStaking = ({ pool }: { pool: Staking }) => {
             variant="bordered"
             className="flex-1 md:flex-none flex items-center justify-center gap-2"
           >
-            <span>Deposit</span>
+            <span>Stake</span>
             <ArrowDown className="w-4 h-4" />
           </Button>
           <Button
