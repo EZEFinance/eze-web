@@ -49,7 +49,7 @@ export default function ModalTransaction({
                 </Snippet>
               ))}
               <Link
-                href={urlSepoliaBasescan(data && data?.transactionReceipts[0]?.transactionHash, 'transaction')}
+                href={urlSepoliaBasescan({ address: data && data?.transactionReceipts[0]?.transactionHash, type: 'transaction' })}
                 target='_blank'
                 rel='noopener noreferrer'
                 className='underline underline-offset-1 cursor-pointer text-sm text-center'
@@ -66,6 +66,6 @@ export default function ModalTransaction({
           </Button>
         </ModalBody>
       </ModalContent>
-    </Modal>
+    </Modal >
   )
 }

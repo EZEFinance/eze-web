@@ -22,7 +22,7 @@ const StatItem = ({
   subValue?: string,
   className?: string 
 }) => (
-  <div className={`rounded-lg bg-slate-50 dark:bg-slate-800/50 p-4 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors duration-200 ${className}`}>
+  <div className={`rounded-lg  ${className}`}>
     <div className="flex items-center gap-2 mb-2">
       <div className="p-2 rounded-full bg-primary/10">
         <Icon className="w-4 h-4 text-primary" />
@@ -43,7 +43,7 @@ const CardStaking = ({ pool }: { pool: StakingPosition }) => {
   const durationInDays = Math.floor(durationStaked / 86400);
 
   return (
-    <Card className="p-6 shadow-lg hover:shadow-xl transition-all bg-background/50 duration-300 border border-slate-200 dark:border-slate-700">
+    <Card className="p-6 shadow-lg hover:shadow-xl transition-all bg-background/50 duration-300">
       <div className="space-y-6">
         <div className="flex flex-col md:flex-row md:items-center gap-6">
           <div className="flex items-center gap-4 flex-shrink-0">
@@ -98,7 +98,7 @@ const CardStaking = ({ pool }: { pool: StakingPosition }) => {
             />
             <StatItem
               icon={Clock}
-              label="Lock Duration"
+              label="Stake Duration"
               value={`${durationInDays < 1 ? durationInHours + " hours" : durationInDays + " days"}`}
               subValue="Total Period"
             />
@@ -112,23 +112,23 @@ const CardStaking = ({ pool }: { pool: StakingPosition }) => {
         </div>
 
         <div className="flex flex-col md:flex-row gap-4 pt-4">
-          <Tooltip content="Stake additional tokens to increase your position">
+          <Tooltip content="Stake additional tokens with ai wallet">
             <Button
               className="min-h-12 flex-1"
               color='primary'
             >
               <span>Stake More</span>
-              <ArrowDown className="w-4 h-4 ml-2" />
+              <ArrowDown className="w-4 h-4" />
             </Button>
           </Tooltip>
-          <Tooltip content="Withdraw your staked tokens">
+          <Tooltip content="Withdraw your staked tokens to ai wallet">
             <Button
               variant="bordered"
               className="min-h-12 flex-1"
               color='warning'
             >
               <span>Withdraw</span>
-              <ArrowUp className="w-4 h-4 ml-2" />
+              <ArrowUp className="w-4 h-4" />
             </Button>
           </Tooltip>
           <Tooltip content="View contract on blockchain explorer">

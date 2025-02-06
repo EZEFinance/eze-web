@@ -43,7 +43,7 @@ export default function ModalTransactionCustom({
                   {data && data.length > 20 ? `${data.substring(0, 30)}...` : data}
                 </Snippet>
               <Link
-                href={urlSepoliaBasescan(data && data, 'transaction')}
+                href={urlSepoliaBasescan({ address: data && data, type: 'transaction'})}
                 target='_blank'
                 rel='noopener noreferrer'
                 className='underline underline-offset-1 cursor-pointer text-sm text-center'
