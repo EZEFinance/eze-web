@@ -65,7 +65,7 @@ export default function ModalTransaction({
             Close
           </Button>
         </ModalBody>
-      </ModalContent >
-    </Modal >
+      </ModalContent>
+    </Modal>
   )
 }

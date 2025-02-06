@@ -20,7 +20,7 @@ const request = async (endpoint: string, options?: RequestInit) => {
   return response.json();
 };
 
-export const api = {
+export const apiAgent = {
   get: (endpoint: string) => request(endpoint, { method: 'GET' }),
 
   post: (endpoint: string, body?: Record<string, unknown>) =>
@@ -30,4 +30,4 @@ export const api = {
     }),
 };
 
-export default api;
+export default apiAgent;
