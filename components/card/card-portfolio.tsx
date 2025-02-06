@@ -86,12 +86,12 @@ export default function CardPortfolio({
   }
 
   return (
-    <Card className={`w-full overflow-hidden bg-background/50`}>
+    <Card className={`w-full bg-background/50 overflow-hidden`}>
       <CardBody className="relative p-6 items-center flex justify-center">
         <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-3xl" />
         <div className="absolute bottom-0 left-0 w-24 h-24 bg-purple-500/10 rounded-full blur-2xl" />
 
-        <div className="flex flex-col gap-6 items-center">
+        <div className="flex flex-col gap-6 items-center max-w-sm">
           {!isDisconnected && (
             <div className="flex flex-col items-center gap-4">
               <div className="relative group">
@@ -123,7 +123,7 @@ export default function CardPortfolio({
             {isDisconnected ? (
               <WalletComponents />
             ) : (
-              <div className="space-y-4">
+              <div className="space-y-4 max-w-[250px] sm:max-w-none">
                 <div className="p-4 rounded-xl bg-transparent border-1 border-gray-700">
                   <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2">
                     <span className="text-sm text-gray-400">Wallet Address</span>
@@ -197,7 +197,7 @@ export default function CardPortfolio({
                   <Wallet className="h-4 w-4" />
                   {isAIWallet ? 'Switch to Main Wallet' : 'Switch to AI Wallet'}
                 </Button>
-                <Chip variant='flat' color='secondary'>Note: Switch to AI Wallet to see your staking data.</Chip>
+                <span className='break-words text-sm'>Note: Switch to AI Wallet to see your staking data.</span>
               </div>
             )}
           </div>
