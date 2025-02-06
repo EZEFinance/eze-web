@@ -69,7 +69,6 @@ export default function QuestionnaireContent({
     }
   };
 
-
   const handleChange = (index: number, value: string | null) => {
     setFormData((prev) => ({
       ...prev,
@@ -99,7 +98,7 @@ export default function QuestionnaireContent({
               value={formData[index]?.toString() || ""}
             >
               {q.options.map((option, optIndex) => (
-                <SelectItem key={optIndex} value={optIndex.toString()} aria-required>
+                <SelectItem key={optIndex} value={optIndex.toString()} aria-required aria-label="Select an option">
                   {option}
                 </SelectItem>
               ))}

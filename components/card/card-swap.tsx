@@ -108,7 +108,6 @@ const SwapCard: React.FC = () => {
                     value={fromAmount}
                     onChange={(e) => {
                       const value = e.target.value;
-                      // Only allow numeric input
                       if (/^\d*\.?\d*$/.test(value)) {
                         setFromAmount(value);
                       }
@@ -191,6 +190,8 @@ const SwapCard: React.FC = () => {
           <ButtonSwap
             fromToken={fromToken as Token}
             toToken={toToken as Token}
+            bFromRefetch={bFromRefetch}
+            bToRefetch={bToRefetch}
             validateSwap={validateSwap}
             addressTokenIn={fromToken?.addressToken as string}
             addressTokenOut={toToken?.addressToken as string}

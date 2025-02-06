@@ -20,8 +20,7 @@ export const useGenerateRiskAI = () => {
     mutationFn: async ({ data }: { data: string }) => {
       setSteps([{ step: 1, status: "loading" }]);
       const response = await apiAgent.post("generate-risk-profile", { data: data });
-      setResult(response.data as GenerateRiskResponse);
-      return response.data as GenerateRiskResponse;
+      return response as GenerateRiskResponse;
     },
     onSuccess: (data) => {
       setResult(data);

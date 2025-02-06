@@ -57,6 +57,6 @@ export const siteConfig = {
   ],
   links: {
     github: "https://github.com/EZEFinance",
-    docs: "#",
+    docs: "https://kbaji.gitbook.io/eze-finance",
   },
 };

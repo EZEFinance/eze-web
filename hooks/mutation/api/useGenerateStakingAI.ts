@@ -19,9 +19,8 @@ export const useGenerateStakingAI = () => {
   const mutation = useMutation({
     mutationFn: async ({ data }: { data: string }) => {
       setSteps([{ step: 1, status: "loading" }]);
-      const response = await apiAgent.post("query", { data: data });
-      setResult(response.data as GenerateStakingResponse);
-      return response.data as GenerateStakingResponse;
+      const response = await apiAgent.post("query", { query: data });
+      return response as GenerateStakingResponse;
     },
     onSuccess: (data) => {
       setResult(data);

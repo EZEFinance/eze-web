@@ -21,6 +21,8 @@ import ModalTransaction from '../modal/modal-transaction';
 interface ButtonSwapProps {
   fromToken: { addressToken: string } | null;
   toToken: { addressToken: string } | null;
+  bFromRefetch: () => void;
+  bToRefetch: () => void;
   validateSwap: () => boolean;
   addressTokenIn: string;
   addressTokenOut: string;
@@ -32,6 +34,8 @@ interface ButtonSwapProps {
 export default function ButtonSwap({
   fromToken,
   toToken,
+  bFromRefetch,
+  bToRefetch,
   validateSwap,
   addressTokenIn,
   addressTokenOut,
@@ -69,7 +73,9 @@ export default function ButtonSwap({
   const handleSuccess = useCallback((response: TransactionResponse) => {
     setTransactionData(response);
     setIsModalOpen(true);
-  }, []);
+    bFromRefetch();
+    bToRefetch();
+  }, [bFromRefetch, bToRefetch]);
 
   const handleStatusChange = useCallback((status: { statusName: string }) => {
     setTransactionStatus(status.statusName);
