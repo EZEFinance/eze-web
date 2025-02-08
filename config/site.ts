@@ -13,8 +13,8 @@ export const siteConfig = {
       href: "/generate",
     },
     {
-      label: "Swap",
-      href: "/swap"
+      label: "Transaction",
+      href: "/transaction"
     },
     {
       label: "Docs",
@@ -39,8 +39,8 @@ export const siteConfig = {
       href: "/generate",
     },
     {
-      label: "Swap",
-      href: "/swap"
+      label: "Transaction",
+      href: "/transaction"
     },
     {
       label: "Docs",

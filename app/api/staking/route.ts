@@ -6,7 +6,7 @@ export async function GET() {
     const response = await fetch(url);
     
     if (!response.ok) {
-        return NextResponse.json({ error: 'Failed to fetch lyrics' }, { status: 500 });
+        return NextResponse.json({ error: 'Failed to fetch data' }, { status: 500 });
     }
 
     const data = await response.json();
