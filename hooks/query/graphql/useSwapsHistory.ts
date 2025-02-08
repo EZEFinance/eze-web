@@ -7,11 +7,11 @@ interface Swaps {
   swaps: SwapsResponse[]
 }
 
-export const useSwapsHistory = () => {
+export const useSwapsHistory = ({ address }: { address: HexAddress }) => {
   const { data, isLoading, refetch } = useQuery<Swaps>({
-    queryKey: ["swaps"],
+    queryKey: ["swaps", address],
     queryFn: async () => {
-      return await request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL || "", querySwaps);
+      return await request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL || "", querySwaps((address.toString()).toLowerCase()));
     },
     refetchInterval: 30000,
   })
@@ -19,7 +19,7 @@ export const useSwapsHistory = () => {
   const swaps = data?.swaps || []
 
   return {
-    sData: swaps,
+    dSwaps: swaps,
     sLoading: isLoading,
     sRefetch: refetch,
   }

@@ -1,5 +1,6 @@
 "use client";
 
+import HistoryCard from "@/components/card/card-history";
 import SwapCard from "@/components/card/card-swap";
 import TransferCard from "@/components/card/card-transfer";
 import { Tabs, Tab } from "@heroui/tabs";
@@ -56,7 +57,7 @@ export default function TransactionTabs() {
         </Tabs>
         {selected === "photos" && <SwapCard />}
         {selected === "music" && <TransferCard />}
-        {selected === "videos" && <div>Videos</div>}
+        {selected === "videos" && <HistoryCard />}
       </div>
     </div>
   )

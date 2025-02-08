@@ -7,11 +7,11 @@ interface Transfers {
   transfers: TransfersResponse[]
 }
 
-export const useTransfersHistory = () => {
+export const useTransfersHistory = ({ address }: { address: HexAddress }) => {
   const { data, isLoading, refetch } = useQuery<Transfers>({
-    queryKey: ["transfers"],
+    queryKey: ["transfers", address],
     queryFn: async () => {
-      return await request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL || "", queryTransfers);
+      return await request(process.env.NEXT_PUBLIC_API_GRAPHQL_URL || "", queryTransfers((address.toString()).toLowerCase()));
     },
     refetchInterval: 30000,
   })
@@ -19,7 +19,7 @@ export const useTransfersHistory = () => {
   const transfers = data?.transfers || []
 
   return {
-    tData: transfers,
+    dTransfers: transfers,
     tLoading: isLoading,
     tRefetch: refetch,
   }
