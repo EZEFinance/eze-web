@@ -22,3 +22,23 @@ export const queryTransfers = (address: string) => {
     }
   }`
 }
+
+export const queryStakeds = (address: string) => {
+  return gql`{
+    stakeds(orderBy: blockTimestamp, orderDirection: desc, where: {staker: "${address}"}) {
+      amount
+      staker
+      transactionHash
+    }
+  }`
+}
+
+export const queryWithdraws = (address: string) => {
+  return gql`{
+    withdrawAlls(orderBy: blockTimestamp, orderDirection: desc, where: {withdrawer: "${address}"}) {
+      amount
+      transactionHash
+      withdrawer
+    }
+  }`
+}
