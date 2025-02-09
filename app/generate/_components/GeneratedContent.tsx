@@ -83,7 +83,7 @@ export default function GeneratedContent({
     <div className="max-w-sm md:max-w-6xl">
       {(mutation.isPending) && <Loading />}
       <p className="text-neutral-800 dark:text-neutral-200 text-sm md:text-lg font-normal mb-4">
-        You classified as <span className="font-semibold">{risk}</span> risk. here&apos;s our recommended staking option:
+        You classified as <span className="font-semibold">{risk == "low" ? "Conservative" : risk == "medium" ? "Balanced" : risk == "high" ? "Aggressive" : ""}</span> risk. here&apos;s our recommended staking option:
       </p>
       {sData && curStaking && (
         <Card className="p-4 bg-background/50">

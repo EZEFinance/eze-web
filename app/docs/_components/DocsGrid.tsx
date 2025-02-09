@@ -193,7 +193,7 @@ const SkeletonFour = () => {
           Balanced allocation.
         </p>
         <p className="border text-center border-orange-500 bg-orange-100 dark:bg-red-900/20 text-orange-600 text-xs rounded-full px-2 py-0.5 mt-4">
-          Medium Risk
+          Balanced
         </p>
       </motion.div>
       <motion.div className="h-full relative z-20 w-1/3 rounded-2xl bg-white p-4 dark:bg-black dark:border-white/[0.1] border border-neutral-200 flex flex-col items-center justify-center">
@@ -202,7 +202,7 @@ const SkeletonFour = () => {
           Save allocation.
         </p>
         <p className="border text-center border-green-500 bg-green-100 dark:bg-green-900/20 text-green-600 text-xs rounded-full px-2 py-0.5 mt-4">
-          Low Risk
+          Conservative
         </p>
       </motion.div>
       <motion.div
@@ -214,7 +214,7 @@ const SkeletonFour = () => {
           Risky allocation.
         </p>
         <p className="border text-center border-red-500 bg-red-100 dark:bg-orange-900/20 text-red-600 text-xs rounded-full px-2 py-0.5 mt-4">
-          High Risk
+          Aggressive
         </p>
       </motion.div>
     </motion.div>
