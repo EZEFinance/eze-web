@@ -18,6 +18,7 @@ import ModalStake from "@/components/modal/modal-stake";
 import { useProofHistory } from "@/hooks/query/graphql/useProof";
 import { Link } from "@heroui/link";
 import { urlSepoliaBasescan } from "@/lib/utils";
+import { Skeleton } from "@heroui/skeleton";
 
 export default function GeneratedContent({
   risk,
@@ -29,7 +30,7 @@ export default function GeneratedContent({
   const { sData } = useStaking();
   const { mutation, result } = useStakeAI();
   const { address } = useAccount();
-  const { dProof } = useProofHistory({ address: address as HexAddress });
+  const { dProof, sLoading } = useProofHistory({ address: address as HexAddress });
 
   const [isModalTransactionOpen, setIsModalTransactionOpen] = useState<boolean>(false);
 
@@ -83,7 +84,7 @@ export default function GeneratedContent({
     <div className="max-w-sm md:max-w-6xl">
       {(mutation.isPending) && <Loading />}
       <p className="text-neutral-800 dark:text-neutral-200 text-sm md:text-lg font-normal mb-4">
-        You classified as <span className="font-semibold">{risk == "low" ? "Conservative" : risk == "medium" ? "Balanced" : risk == "high" ? "Aggressive" : ""}</span> risk. here&apos;s our recommended staking option:
+        You classified as <span className="font-semibold">{risk.includes("low") ? "Conservative" : risk.includes("medium") ? "Balanced" : risk.includes("high") ? "Aggressive" : ""}</span> risk. here&apos;s our recommended staking option:
       </p>
       {sData && curStaking && (
         <Card className="p-4 bg-background/50">
@@ -149,13 +150,13 @@ export default function GeneratedContent({
         <div>
           <p className="text-sm font-medium">Proof Signature:</p>
           <Snippet variant="bordered" className="text-white" color="primary" title="Your Proof Signature" hideSymbol>
-            {truncateAddress(latestProof?.signature)}
+            {sLoading ? <Skeleton className="w-24 h-4" /> : truncateAddress(latestProof?.signature)}
           </Snippet>
         </div>
         <div className="flex flex-col gap-1">
           <p className="text-sm font-medium">Proof Transaction Hash:</p>
           <Snippet variant="bordered" className="w-fit text-white" color="primary" title="Transaction Hash" hideSymbol>
-            {truncateAddress(latestProof?.transactionHash)}
+          {sLoading ? <Skeleton className="w-24 h-4" /> : truncateAddress(latestProof?.transactionHash)}
           </Snippet>
           <Link
             href={urlSepoliaBasescan({ txHash: latestProof?.transactionHash, type: "transaction" })}

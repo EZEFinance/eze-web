@@ -1,31 +1,25 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import axios from 'axios';
+import https from 'https';
+
 let baseURL = process.env.NEXT_PUBLIC_API_AGENT_URL || '';
 if (baseURL && !baseURL.endsWith('/')) {
   baseURL += '/';
 }
 
-const request = async (endpoint: string, options?: RequestInit) => {
-  const response = await fetch(`${baseURL}${endpoint}`, {
-    ...options,
-    headers: {
-      ...(options?.headers || {}),
-    },
-  });
+const agent = new https.Agent({
+  rejectUnauthorized: false,
+});
 
-  if (!response.ok) {
-    throw new Error(`API error: ${response.status} ${response.statusText}`);
-  }
-
-  return response.json();
-};
+const apiSet = axios.create({
+  baseURL,
+  httpsAgent: agent,
+});
 
 const apiAgent = {
-  get: (endpoint: string) => request(endpoint, { method: 'GET' }),
-
-  post: (endpoint: string, body?: Record<string, unknown>) =>
-    request(endpoint, {
-      method: 'POST',
-      body: body ? JSON.stringify(body) : undefined,
-    }),
+  get: (endpoint: any) => apiSet.get(endpoint).then((res: any) => (res as any).data),
+  post: (endpoint: any, body?: Record<any, any>): Promise<any> =>
+    apiSet.post(endpoint, body).then((res: any) => (res as any).data),
 };
 
 export default apiAgent;
