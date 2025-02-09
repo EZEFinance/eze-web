@@ -1,7 +1,7 @@
 import { subtitle, title } from "@/components/primitives";
 import Link from "next/link";
 
-export default function page() {
+export default function Page() {
   return (
     <section id="home" className="flex w-full h-full items-center justify-center flex-grow">
       <div className="max-w-lg text-center inline-block">

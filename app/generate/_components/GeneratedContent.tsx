@@ -3,17 +3,21 @@ import { Image } from '@heroui/image'
 import { Card } from '@heroui/card'
 import { Chip } from '@heroui/chip'
 import { ArrowDown, ChartArea, DollarSign, Loader2 } from 'lucide-react'
-import { formatPercent, formatUSD, normalizeAPY } from '@/lib/helper'
+import { formatPercent, formatUSD, normalizeAPY, truncateAddress } from '@/lib/helper'
 import { useStaking } from "@/hooks/query/useStaking";
 import { Staking } from "@/types/staking";
 import { useEffect, useState } from "react";
 import { useStakeAI } from "@/hooks/mutation/api/useStakeAI";
 import { useAccount } from "wagmi";
+import { Snippet } from '@heroui/snippet';
 import Loading from "@/components/loader/loading";
 import { useAccountBalanceAI } from "@/hooks/query/useAccountBalanceAI";
 import { DECIMALS_MOCK_TOKEN } from "@/lib/constants";
 import ModalTransactionCustom from "@/components/modal/modal-transaction-custom";
 import ModalStake from "@/components/modal/modal-stake";
+import { useProofHistory } from "@/hooks/query/graphql/useProof";
+import { Link } from "@heroui/link";
+import { urlSepoliaBasescan } from "@/lib/utils";
 
 export default function GeneratedContent({
   risk,
@@ -25,6 +29,7 @@ export default function GeneratedContent({
   const { sData } = useStaking();
   const { mutation, result } = useStakeAI();
   const { address } = useAccount();
+  const { dProof } = useProofHistory({ address: address as HexAddress });
 
   const [isModalTransactionOpen, setIsModalTransactionOpen] = useState<boolean>(false);
 
@@ -34,9 +39,15 @@ export default function GeneratedContent({
   useEffect(() => {
     if (!sData) return;
 
-    const findStaking = sData.find((item) => {
+    let findStaking = sData.find((item) => {
       return item.idProtocol?.trim() === protocolId.replace(/"/g, "")
     });
+
+    if (!findStaking) {
+      findStaking = sData.find((item) => {
+        return item.nameToken?.trim() === protocolId.replace(/"/g, "")
+      })
+    }
 
     setCurStaking(findStaking || null);
   }, [sData, protocolId]);
@@ -44,8 +55,8 @@ export default function GeneratedContent({
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [amountStaked, setAmountStaked] = useState<string>("0");
 
-  const handleStake = () => {
-    mutation.mutate({
+  const handleStake = async () => {
+    mutation.mutateAsync({
       user_address: address!,
       asset_id: curStaking?.nameToken.toLowerCase() || '',
       protocol: curStaking?.nameProject?.toLowerCase() || '',
@@ -64,6 +75,9 @@ export default function GeneratedContent({
   };
 
   const closeModalTransaction = () => setIsModalTransactionOpen(false);
+
+  const latestProof = dProof.reduce((max, item) =>
+    item.taskIndex > max.taskIndex ? item : max, dProof[0]);
 
   return (
     <div className="max-w-sm md:max-w-6xl">
@@ -131,6 +145,28 @@ export default function GeneratedContent({
           </div>
         </Card>
       )}
+      <div className="flex flex-col gap-4 my-4">
+        <div>
+          <p className="text-sm font-medium">Proof Signature:</p>
+          <Snippet variant="bordered" className="text-white" color="primary" title="Your Proof Signature" hideSymbol>
+            {truncateAddress(latestProof?.signature)}
+          </Snippet>
+        </div>
+        <div className="flex flex-col gap-1">
+          <p className="text-sm font-medium">Proof Transaction Hash:</p>
+          <Snippet variant="bordered" className="w-fit text-white" color="primary" title="Transaction Hash" hideSymbol>
+            {truncateAddress(latestProof?.transactionHash)}
+          </Snippet>
+          <Link
+            href={urlSepoliaBasescan({ txHash: latestProof?.transactionHash, type: "transaction" })}
+            isExternal
+            color="warning"
+            className="text-sm font-medium underline underline-offset-1"
+          >
+            View on Basescan
+          </Link>
+        </div>
+      </div>
       <ModalStake
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}

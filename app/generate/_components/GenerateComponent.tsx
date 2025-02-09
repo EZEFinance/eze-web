@@ -17,7 +17,7 @@ const GenerateComponent: React.FC = () => {
   const { addressAI, laAI } = useAddressAI();
 
   if (laAI) {
-    return <Loading />;
+    return <Loading className="z-[90]"/>;
   }
 
   const timelineData = [

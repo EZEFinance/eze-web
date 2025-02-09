@@ -3,10 +3,18 @@ import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import apiAgent from "@/lib/api-agent";
 import React from "react";
+import { ADDRESS_AVS } from "@/lib/constants";
+import { AVSAbi } from "@/lib/abis/AVSAbi";
+import { walletClient } from "@/lib/client";
+import { useAccount } from "wagmi";
+import { baseSepolia } from "viem/chains";
+import { encodeFunctionData } from "viem";
 
 type Status = "idle" | "loading" | "success" | "error";
 
 export const useGenerateAI = () => {
+  const { address } = useAccount()
+
   const [risk, setRisk] = React.useState<string | null>(null);
   const [protocolId, setProtocolId] = React.useState<string | null>(null);
 
@@ -36,7 +44,7 @@ export const useGenerateAI = () => {
     {
       step: 2,
       status: "idle",
-    },
+    }
   ]);
 
   const mutation = useMutation({
@@ -83,7 +91,30 @@ export const useGenerateAI = () => {
 
         if (matchingClassification) {
           const response = await apiAgent.post("query", { query: matchingClassification.prompt });
-          setProtocolId(response.response[0]?.id_project);
+
+          if (response.response[0]?.id_project) {
+            try {
+              await walletClient.switchChain({ id: baseSepolia.id });
+
+              const txHash = await walletClient.sendTransaction({
+                to: ADDRESS_AVS,
+                data: encodeFunctionData({
+                  abi: AVSAbi,
+                  functionName: "taskAgent",
+                  args: [response.response[0]?.id_project]
+                }),
+                account: address as HexAddress,
+                chain: baseSepolia
+              });
+
+              if (txHash) {
+                setProtocolId(response.response[0]?.id_project);
+              }
+            } catch (contractError) {
+              console.error("Contract interaction failed:", contractError);
+              throw new Error(`Contract execution failed: ${(contractError as Error).message}`);
+            }
+          }
         }
 
         setSteps((prev) =>
@@ -94,6 +125,7 @@ export const useGenerateAI = () => {
             return item;
           })
         );
+
       } catch (e) {
         console.error("Bid Error", e);
 

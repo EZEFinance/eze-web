@@ -42,3 +42,19 @@ export const queryWithdraws = (address: string) => {
     }
   }`
 }
+
+export const queryProof = (address: string) => {
+  return gql`{
+    ezeTaskRespondeds(
+      orderBy: blockTimestamp
+      orderDirection: desc
+      where: {task_accountAddress: "${address}"}
+    ) {
+      taskIndex
+      signature
+      task_stakingAddress
+      task_accountAddress
+      transactionHash
+    }
+  }`
+}

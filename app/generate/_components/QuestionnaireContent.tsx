@@ -4,6 +4,7 @@ import { Form } from "@heroui/form";
 import { Select, SelectItem } from "@heroui/select";
 import { dataForm } from "@/data/dataForm";
 import { useGenerateAI } from "@/hooks/mutation/api/useGenerateAI";
+import { Loader2 } from "lucide-react";
 
 interface FormData {
   [key: number]: number | null;
@@ -82,7 +83,7 @@ export default function QuestionnaireContent() {
           color="primary"
           disabled={mutation.isPending}
         >
-          Submit
+          {mutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <span>Submit</span>}
         </Button>
       </Form>
     </div>
