@@ -1,9 +1,15 @@
-import DashboardComponent from "./_components/DashboardComponent";
+"use client"
 
-export default function page() {
+import { useAccount } from 'wagmi'
+import DashboardComponent from "./_components/DashboardComponent";
+import WalletConnection from '@/components/wallet-connection';
+
+export default function Page() {
+  const { isConnected } = useAccount();
+
   return (
-    <section id="dashboard" className="flex w-full h-full items-center justify-center flex-grow py-10">
-      <DashboardComponent />
+    <section id='chat' className='flex-grow flex flex-col items-center justify-center relative'>
+      {isConnected ? <DashboardComponent /> : <WalletConnection />}
     </section>
-  );
+  )
 }

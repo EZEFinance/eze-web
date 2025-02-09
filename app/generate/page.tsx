@@ -1,9 +1,15 @@
-import GenerateComponent from './_components/GenerateComponent'
+"use client"
 
-export default function page() {
+import { useAccount } from 'wagmi'
+import GenerateComponent from './_components/GenerateComponent'
+import WalletConnection from '@/components/wallet-connection';
+
+export default function Page() {
+  const { isConnected } = useAccount();
+
   return (
     <section id='chat' className='flex-grow flex flex-col items-center justify-center relative'>
-      <GenerateComponent />
+      {isConnected ? <GenerateComponent /> : <WalletConnection />}
     </section>
   )
 }

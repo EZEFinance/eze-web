@@ -7,8 +7,6 @@ const request = async (endpoint: string, options?: RequestInit) => {
   const response = await fetch(`${baseURL}${endpoint}`, {
     ...options,
     headers: {
-      "Content-Type": "application/json",
-      "Accept": "application/json",
       ...(options?.headers || {}),
     },
   });

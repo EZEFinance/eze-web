@@ -12,7 +12,7 @@ export const useAddressAI = () => {
       const response = await apiAgent.post("action/get-wallet", { user_address: address })
       return response
     },
-    retry: 5,
+    retry: 3,
     retryDelay: 1000,
     refetchInterval: 30000,
     retryOnMount: false,

@@ -1,10 +1,15 @@
-import React from 'react'
-import { FaucetGrid } from './_components/FaucetGrid'
+"use client"
 
-export default function page() {
+import { useAccount } from 'wagmi'
+import { FaucetGrid } from './_components/FaucetGrid'
+import WalletConnection from '@/components/wallet-connection';
+
+export default function Page() {
+  const { isConnected } = useAccount();
+
   return (
-    <div>
-      <FaucetGrid />
-    </div>
+    <section id='chat' className='flex-grow flex flex-col items-center justify-center relative'>
+      {isConnected ? <FaucetGrid /> : <WalletConnection />}
+    </section>
   )
 }

@@ -1,11 +1,15 @@
-import TransactionTabs from "./_components/TransactionTabs";
+"use client"
 
-export default function page() {
+import { useAccount } from 'wagmi'
+import TransactionTabs from "./_components/TransactionTabs";
+import WalletConnection from '@/components/wallet-connection';
+
+export default function Page() {
+  const { isConnected } = useAccount();
+
   return (
-    <section id="home" className="relative flex w-full h-full items-center justify-start sm:justify-center flex-grow overflow-x-auto">
-      <div className="w-full">
-        <TransactionTabs />
-      </div>
+    <section id='chat' className='flex-grow flex flex-col items-center justify-center relative'>
+      {isConnected ? <TransactionTabs /> : <WalletConnection />}
     </section>
-  );
+  )
 }
